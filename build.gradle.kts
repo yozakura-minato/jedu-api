@@ -17,6 +17,8 @@ repositories {
     mavenCentral()
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
+
 dependencies {
     // WEB & DOCUMENTATION ---------------------------------------------------------------------------------------------
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -59,8 +61,17 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.48")
     testCompileOnly("org.projectlombok:lombok:1.18.48")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
+
+    mockitoAgent("org.mockito:mockito-core") {
+        isTransitive = false
+    }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs(
+        "-javaagent:${mockitoAgent.asPath}",
+        "-Xshare:off",
+        "-Duser.timezone=UTC"
+    )
 }

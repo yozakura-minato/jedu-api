@@ -28,13 +28,7 @@
 1. Clone this project
 2. Open with `IntelliJ IDEA`
 3. Download dependencies with `Gradle Kotlin` in [build.gradle.kts](`build.gradle.kts`)
-4. In `Run/Debug Configurations` dialog, set `Add VM Options` as
-
-    ```
-    -Duser.timezone=Asia/Ho_Chi_Minh
-    ```
-
-   and `Active Profiles` as
+4. In `Run/Debug Configurations` dialog, set `Active Profiles` as
 
     ```
     dev
