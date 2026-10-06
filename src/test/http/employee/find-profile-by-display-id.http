@@ -1,0 +1,61 @@
+@validDisplayId = PE2601
+
+### findProfileByDisplayId_success
+GET {{host}}/{{api.v1}}
+    /employees/display-id/{{validDisplayId}}
+Content-Type: {{json}}
+
+> {%
+    client.test("SHOULD return studentProfile WHEN displayId is valid", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.error === null);
+    });
+%}
+
+### findProfileByDisplayId_displayIdNotTrimmed_withHalfWidthWhiteSpace
+GET {{host}}/{{api.v1}}
+    /employees/display-id/{{space.half}}{{validDisplayId}}
+Content-Type: {{json}}
+
+> {%
+    client.test("SHOULD return error WHEN displayId is not trimmed with half-width whitespace", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.error === "employee.displayId.notTrimmed");
+    });
+%}
+
+### findProfileByDisplayId_displayIdNotTrimmed_fullWidthWhiteSpace
+GET {{host}}/{{api.v1}}
+    /employees/display-id/{{space.full}}{{validDisplayId}}
+Content-Type: {{json}}
+
+> {%
+    client.test("SHOULD return error WHEN displayId is not trimmed with full-width whitespace", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.error === "employee.displayId.notTrimmed");
+    });
+%}
+
+### findProfileByDisplayId_displayIdNotFound
+GET {{host}}/{{api.v1}}
+    /employees/display-id/NOT_FOUND
+Content-Type: {{json}}
+
+> {%
+    client.test("SHOULD return error WHEN displayId is not found", () => {
+        client.assert(response.status === 404);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.error === "employee.displayId.notFound");
+    });
+%}
