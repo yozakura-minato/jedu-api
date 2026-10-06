@@ -1,6 +1,6 @@
 @validDisplayId = PE2601
 
-### findProfileByDisplayId_success
+### findProfileByDisplayId_Success
 GET {{host}}/{{api.v1}}
     /employees/display-id/{{validDisplayId}}
 Content-Type: {{json}}
@@ -15,7 +15,7 @@ Content-Type: {{json}}
     });
 %}
 
-### findProfileByDisplayId_displayIdNotTrimmed_withHalfWidthWhiteSpace
+### findProfileByDisplayId_DisplayIdNotTrimmed_WithHalfWidthWhiteSpace
 GET {{host}}/{{api.v1}}
     /employees/display-id/{{space.half}}{{validDisplayId}}
 Content-Type: {{json}}
@@ -30,7 +30,7 @@ Content-Type: {{json}}
     });
 %}
 
-### findProfileByDisplayId_displayIdNotTrimmed_fullWidthWhiteSpace
+### findProfileByDisplayId_DisplayIdNotTrimmed_FullWidthWhiteSpace
 GET {{host}}/{{api.v1}}
     /employees/display-id/{{space.full}}{{validDisplayId}}
 Content-Type: {{json}}
@@ -45,7 +45,7 @@ Content-Type: {{json}}
     });
 %}
 
-### findProfileByDisplayId_displayIdNotFound
+### findProfileByDisplayId_DisplayIdNotFound
 GET {{host}}/{{api.v1}}
     /employees/display-id/NOT_FOUND
 Content-Type: {{json}}
