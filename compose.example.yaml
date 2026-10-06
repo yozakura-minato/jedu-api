@@ -1,0 +1,16 @@
+name: 'jedu'
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: 'pgs'
+    environment:
+      - 'POSTGRES_DB=pgs'
+      - 'POSTGRES_PASSWORD=YOUR_PASSWORD' # <= TO FILL
+      - 'POSTGRES_USER=YOUR_USERNAME'     # <= TO FIL
+      - 'TZ=Asia/Ho_Chi_Minh'
+    ports:
+      - '2345:5432'
+    volumes:
+      - pgs_data:/var/lib/postgresql
+volumes:
+  pgs_data:
