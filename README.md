@@ -30,68 +30,66 @@
 3. Download dependencies with `Gradle Kotlin` in [build.gradle.kts](`build.gradle.kts`)
 4. In `Run/Debug Configurations` dialog, set `Add VM Options` as
 
-```
--Duser.timezone=Asia/Ho_Chi_Minh
-```
+    ```
+    -Duser.timezone=Asia/Ho_Chi_Minh
+    ```
 
-and `Active Profiles` as
+   and `Active Profiles` as
 
-```
-dev
-```
+    ```
+    dev
+    ```
 
 5. Create **compose.yaml** (see [`compose.example.yaml`](compose.example.yaml))
 6. Create **application-dev.yaml** (see [`application-dev.example.yaml`](src/main/resources/application-dev.example.yaml))
 7. Start `Docker Deamon`
 8. Create and start containers
 
-```shell
-docker compose up
-```
+    ```shell
+    docker compose up
+    ```
 
 9. Run the local API application
 
-_The local API application is now running at: http://localhost:8080_
+   _The local API application is now running at: http://localhost:8080_
 
-```
-╔═══════════════════════════════════════════╗
-║ JEDU API application started successfully ║
-╚═══════════════════════════════════════════╝
-```
+    ```
+    ╔═══════════════════════════════════════════╗
+    ║ JEDU API application started successfully ║
+    ╚═══════════════════════════════════════════╝
+    ```
 
-_See API documentation at: http://localhost:8080/swagger-ui/index.html#/_
+   _See API documentation at: http://localhost:8080/swagger-ui/index.html#/_
 
 ## 🗂️ Appendix
 
 ### Dependencies
 
-_Web & API Documentation_
+* Web & API documentation
+    * `Spring Web` for web core
+    * `SpringDoc OpenAPI` for API documentation
 
-* `Spring Web` for web core
-* `SpringDoc OpenAPI` for API documentation
+* Security
+    * `Spring Security` for security
+    * `OAuth2 Resource Server` for authentication & authorization
 
-_Security_
+* Persistence
 
-* `Spring Security` for security
-* `OAuth2 Resource Server` for authentication & authorization
+    * `PostgreSQL Driver` for PostgreSQL driver
+    * `Spring Data Redis (Access+Driver)` Redis driver
+    * `JDBC API` for database connection
+    * `Flyway Migration` for database migration
+    * `P6Spy` for for SQL logging
 
-_Persistence_
+* Development tools
 
-* `PostgreSQL Driver` for PostgreSQL driver
-* `Spring Data Redis (Access+Driver)` Redis driver
-* `JDBC API` for database connection
-* `Flyway Migration` for database migration
-* `P6Spy` for for SQL logging
+    * `JUnit` for testing
+    * `Spring Boot Actuator` for monitoring
 
-_Development Tools_
+* Development utilities
 
-* `JUnit` for testing
-* `Spring Boot Actuator` for monitoring
-
-_Development Utilities_
-
-* `Validation` for validation utils
-* `Lombok` for code generation
+    * `Validation` for validation utils
+    * `Lombok` for code generation
 
 ### Documentation
 

@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
     private final EmployeeApiService employeeApiService;
 
-    @GetMapping(path = "/controller/v1/employees/display-id/{displayId}")
+    @GetMapping(path = "/api/v1/employees/display-id/{displayId}")
     @Operation(summary = "Find EmployeeProfile by displayId", description = """
             * Path variable: displayId - String
             * Return data: EmployeeProfile
             * Return error: when displayId not found"""
     )
-    public ResponseEntity<ApiResponse<EmployeeProfile>> findEmployeeProfileByDisplayId(
+    public ResponseEntity<ApiResponse<EmployeeProfile>> findProfileByDisplayId(
             @PathVariable
             @NotNull(message = EmployeeMessage.DisplayId.NULL)
             @TrimmedString(message = EmployeeMessage.DisplayId.NOT_TRIMMED)

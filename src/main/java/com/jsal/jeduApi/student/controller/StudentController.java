@@ -29,7 +29,7 @@ import java.util.UUID;
 public class StudentController {
     private final StudentApiService studentApiService;
 
-    @PostMapping(path = "/controller/v1/students")
+    @PostMapping(path = "/api/v1/students")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create student", description = """
             * Request body: createRequest - CreateStudentRequest
@@ -45,7 +45,7 @@ public class StudentController {
         return ResponseEntity.ok(ApiResponse.data(displayId));
     }
 
-    @GetMapping(path = "/controller/v1/students/all")
+    @GetMapping(path = "/api/v1/students/all")
     @Operation(summary = "Find all StudentProfiles", description = """
             * Return data: List of StudentProfile""")
     public ResponseEntity<ApiResponse<List<StudentProfile>>> findAllProfiles() {
@@ -53,7 +53,7 @@ public class StudentController {
         return ResponseEntity.ok(ApiResponse.data(profileList));
     }
 
-    @GetMapping(path = "/controller/v1/students/display-id/{displayId}")
+    @GetMapping(path = "/api/v1/students/display-id/{displayId}")
     @Operation(summary = "Find StudentProfile by displayId", description = """
             * Path variable: displayId - String
             * Return data: StudentProfile
