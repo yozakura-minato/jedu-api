@@ -1,7 +1,7 @@
 package com.jsal.jeduApi.student.service;
 
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
+import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 
 import java.util.List;
