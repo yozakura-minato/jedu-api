@@ -21,7 +21,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 public class GeneralExceptionHandler {
     /**
      * @param exception HandlerMethodValidationException
-     * @return ResponseEntity with 400 status and ApiResponse with error message body
+     * @return ResponseEntity with {@code 400 - BAD REQUEST} status and {@code FAIL} ApiResponse
      */
     @ExceptionHandler(exception = HandlerMethodValidationException.class)
     public ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(
@@ -31,45 +31,45 @@ public class GeneralExceptionHandler {
         String message = defaultMessage == null ? CommonMessage.BAD_REQUEST : defaultMessage;
         log.error("HandlerMethodValidationException with message: '{}'", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(message));
+                .body(ApiResponse.fail(message));
     }
 
     /**
      * @param exception ResourceNotFoundException
-     * @return ResponseEntity with 404 status and ApiResponse with error message body
+     * @return ResponseEntity with {@code 404 - NOT FOUND} status and {@code FAIL} ApiResponse
      */
     @ExceptionHandler(exception = ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(ResourceNotFoundException exception) {
         log.error("ResourceNotFoundException with message: '{}'", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.error(exception.getMessage()));
+                .body(ApiResponse.fail(exception.getMessage()));
     }
 
     /**
      * @param exception ResourceConflictException
-     * @return ResponseEntity with 409 status and ApiResponse with error message body
+     * @return ResponseEntity with {@code 409 - CONFLICT} status and {@code FAIL} ApiResponse
      */
     @ExceptionHandler(exception = ResourceConflictException.class)
     public ResponseEntity<ApiResponse<?>> handleResourceConflictException(ResourceConflictException exception) {
         log.error("ResourceConflictException with message: '{}'", exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(ApiResponse.error(exception.getMessage()));
+                .body(ApiResponse.fail(exception.getMessage()));
     }
 
     /**
      * @param exception BusinessLogicException
-     * @return ResponseEntity with 422 status and ApiResponse with error message body
+     * @return ResponseEntity with {@code 422 - UNPROCESSABLE CONTENT} status and {@code FAIL} ApiResponse
      */
     @ExceptionHandler(exception = BusinessLogicException.class)
     public ResponseEntity<ApiResponse<?>> handleBusinessLogicException(BusinessLogicException exception) {
         log.error("BusinessLogicException with message: '{}'", exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
-                .body(ApiResponse.error(exception.getMessage()));
+                .body(ApiResponse.fail(exception.getMessage()));
     }
 
     /**
      * @param exception SqlExecutionException
-     * @return ResponseEntity with 500 status and ApiResponse with internal server error message body
+     * @return ResponseEntity with {@code 500 - INTERNAL SERVER ERROR} status and {@code ERROR} ApiResponse
      */
     @ExceptionHandler(exception = SqlExecutionException.class)
     public ResponseEntity<ApiResponse<?>> handleSqlExecutionException(SqlExecutionException exception) {
@@ -80,7 +80,7 @@ public class GeneralExceptionHandler {
 
     /**
      * @param exception RuntimeException
-     * @return ResponseEntity with 500 status and ApiResponse with internal server error message body
+     * @return ResponseEntity with {@code 500 - INTERNAL SERVER ERROR} status and {@code ERROR} ApiResponse
      */
     @ExceptionHandler(exception = RuntimeException.class)
     public ResponseEntity<ApiResponse<?>> handleRuntimeException(RuntimeException exception) {

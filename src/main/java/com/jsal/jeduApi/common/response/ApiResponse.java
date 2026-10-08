@@ -1,36 +1,51 @@
 package com.jsal.jeduApi.common.response;
 
+import com.jsal.jeduApi.common.response.status.ApiResponseStatus;
+
 /**
  * Base body for API response
  *
- * @param data  T: Response data when request success
- * @param error String: Error message when request failed
- * @param <T>   type of {@code data}
+ * @param status  ApiResponseStatus: Response status
+ * @param data    {@code <T>}: Response data
+ * @param message String: Response message
+ * @param <T>     type of {@code data}
  * @author Yozakura Minato
  */
 public record ApiResponse<T>(
+        ApiResponseStatus status,
         T data,
-        String error
+        String message
 ) {
     /**
-     * Use when request success
+     * Use when the request is processed successfully
      *
-     * @param data T: Response data
+     * @param data {@code <T>}: Response data
      * @param <T>  type of {@code data}
-     * @return ApiResponse with {@code data} and null {@code error}
+     * @return ApiResponse with {@code SUCCESS} status, {@code data} and {@code null} message
      */
-    public static <T> ApiResponse<T> data(T data) {
-        return new ApiResponse<>(data, null);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(ApiResponseStatus.SUCCESS, data, null);
     }
 
     /**
-     * Use when request failed
+     * Use when the request process failed
      *
-     * @param error String: Error message
-     * @param <T>   type of {@code data}
-     * @return ApiResponse with {@code error} and null {@code data}
+     * @param message String: Response message
+     * @param <T>     type of {@code data}
+     * @return ApiResponse with {@code FAIL} status, {@code null} data and {@code message}
      */
-    public static <T> ApiResponse<T> error(String error) {
-        return new ApiResponse<>(null, error);
+    public static <T> ApiResponse<T> fail(String message) {
+        return new ApiResponse<>(ApiResponseStatus.FAIL, null, message);
+    }
+
+    /**
+     * Use when unexpected error occurred when processing the request
+     *
+     * @param message String: Response message
+     * @param <T>     type of {@code data}
+     * @return ApiResponse with {@code ERROR} status, {@code null} data and {@code message}
+     */
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(ApiResponseStatus.ERROR, null, message);
     }
 }
