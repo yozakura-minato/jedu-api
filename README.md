@@ -35,7 +35,7 @@
     ```
 
 5. Create **compose.yaml** (see [`compose.example.yaml`](compose.example.yaml))
-6. Create **application-dev.yaml** (see [`application-dev.example.yaml`](src/main/resources/application-dev.example.yaml))
+6. Create **application-dev.properties** (see [`application-dev.example.properties`](src/main/resources/application-dev.example.properties))
 7. Start `Docker Deamon`
 8. Create and start containers
 
