@@ -1,4 +1,4 @@
-package com.jsal.jeduApi.employee.model;
+package com.jsal.jeduApi.student.repository.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public enum EmployeeStatus {
+public enum StudentStatus {
     CREATED("CREATED"),
     ACTIVE("ACTIVE");
 
