@@ -27,7 +27,7 @@ public class EmployeeController {
     private final EmployeeApiService employeeApiService;
 
     @GetMapping(path = "/api/v1/employees/all")
-    @Operation(summary = "Find ", description = """
+    @Operation(summary = "Find all EmployeeTitle", description = """
             * When success: return List of EmployeeTitle""")
     public ResponseEntity<ApiResponse<List<EmployeeTitle>>> findAllTitles() {
         List<EmployeeTitle> titleList = employeeApiService.findAllTitles();
