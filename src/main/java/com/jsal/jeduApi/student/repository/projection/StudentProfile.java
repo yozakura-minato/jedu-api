@@ -1,6 +1,6 @@
 package com.jsal.jeduApi.student.repository.projection;
 
-import com.jsal.jeduApi.student.model.StudentStatus;
+import com.jsal.jeduApi.student.repository.type.StudentStatus;
 
 /**
  * @param displayId   String

@@ -1,7 +1,7 @@
 package com.jsal.jeduApi.student.repository.mapper;
 
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.model.StudentStatus;
+import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
