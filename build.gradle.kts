@@ -45,6 +45,8 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
 
+    implementation("org.simpleflatmapper:sfm-springjdbc:9.0.2")
+
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:2.0.1")
 
     // DEVELOPMENT TOOLS -----------------------------------------------------------------------------------------------
@@ -54,8 +56,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
 
     // DEVELOPMENT UTILITIES -------------------------------------------------------------------------------------------
-    implementation("org.simpleflatmapper:sfm-springjdbc:9.0.2")
-
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 
