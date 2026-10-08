@@ -72,8 +72,9 @@
     - `PostgreSQL Driver` for PostgreSQL driver
     - `Spring Data Redis (Access+Driver)` Redis driver
     - `JDBC API` for database connection
-    - `Flyway Migration` for database migration
+    - `Simple Float Mapper Spring JDBC` for SQL result mapping
     - `P6Spy` for for SQL logging
+    - `Flyway Migration` for database migration
 
 - Development tools
 
