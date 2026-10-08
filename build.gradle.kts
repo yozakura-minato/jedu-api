@@ -27,9 +27,9 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
     // SECURITY --------------------------------------------------------------------------------------------------------
-//    implementation("org.springframework.boot:spring-boot-starter-security")
-//    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
-//
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+
 //    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
 //    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
 
@@ -54,6 +54,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
 
     // DEVELOPMENT UTILITIES -------------------------------------------------------------------------------------------
+    implementation("org.simpleflatmapper:sfm-springjdbc:9.0.2")
+
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 
