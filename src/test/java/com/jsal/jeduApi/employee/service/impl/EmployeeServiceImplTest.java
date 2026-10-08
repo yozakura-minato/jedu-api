@@ -3,6 +3,7 @@ package com.jsal.jeduApi.employee.service.impl;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.EmployeeRepository;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
+import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import com.jsal.jeduApi.employee.util.EmployeeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,13 +35,37 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
+    @DisplayName(value = "Test for: findAllTitles")
+    class FindAllTitlesTest {
+        @Test
+        @DisplayName(value = "Scenario 1: SHOULD return title list WHEN called")
+        void findAllTitles_success() {
+            // Arrange
+            var expectedTitleList = EmployeeTitle.listMock();
+
+            when(employeeRepository.selectAllTitles()).thenReturn(expectedTitleList);
+
+            // Act
+            var actualTitleList = employeeApiService.findAllTitles();
+
+            // Assert
+            verify(employeeRepository, times(1)).selectAllTitles();
+
+            assertEquals(expectedTitleList, actualTitleList);
+        }
+    }
+
+    /**
+     * @author Yozakura Minato
+     */
+    @Nested
     @DisplayName(value = "Test for: findProfileById")
-    class FindProfileByDisplayIdTest {
+    class FindProfileByIdTest {
         public static final UUID ID = UUID.randomUUID();
 
         @Test
         @DisplayName(value = "Scenario 1: SHOULD return employeeProfile WHEN displayId is valid")
-        void findProfileByDisplayId_Success() {
+        void findProfileById_Success() {
             // Arrange
             var expectedProfile = EmployeeProfile.mockWithId(ID);
             when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.of(expectedProfile));
@@ -56,7 +81,7 @@ class EmployeeServiceImplTest {
 
         @Test
         @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN displayId is not found")
-        void findProfileByDisplayId_DisplayIdNotFound() {
+        void findProfileById_DisplayIdNotFound() {
             // Arrange
             when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.empty());
 
