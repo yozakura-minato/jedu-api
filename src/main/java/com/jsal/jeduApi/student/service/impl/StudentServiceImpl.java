@@ -7,7 +7,6 @@ import com.jsal.jeduApi.common.util.CommonMessage;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.repository.StudentRepository;
-import com.jsal.jeduApi.student.repository.mapper.StudentParamsMapper;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.service.StudentApiService;

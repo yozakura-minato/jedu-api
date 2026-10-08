@@ -17,17 +17,19 @@ repositories {
     mavenCentral()
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
+
 dependencies {
     // WEB & DOCUMENTATION ---------------------------------------------------------------------------------------------
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
     // SECURITY --------------------------------------------------------------------------------------------------------
-//    implementation("org.springframework.boot:spring-boot-starter-security")
-//    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
-//
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+
 //    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
 //    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
 
@@ -52,6 +54,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
 
     // DEVELOPMENT UTILITIES -------------------------------------------------------------------------------------------
+    implementation("org.simpleflatmapper:sfm-springjdbc:9.0.2")
+
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 
@@ -59,8 +63,17 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.48")
     testCompileOnly("org.projectlombok:lombok:1.18.48")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
+
+    mockitoAgent("org.mockito:mockito-core") {
+        isTransitive = false
+    }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs(
+        "-javaagent:${mockitoAgent.asPath}",
+        "-Xshare:off",
+        "-Duser.timezone=UTC"
+    )
 }

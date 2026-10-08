@@ -28,20 +28,14 @@
 1. Clone this project
 2. Open with `IntelliJ IDEA`
 3. Download dependencies with `Gradle Kotlin` in [build.gradle.kts](`build.gradle.kts`)
-4. In `Run/Debug Configurations` dialog, set `Add VM Options` as
-
-    ```
-    -Duser.timezone=Asia/Ho_Chi_Minh
-    ```
-
-   and `Active Profiles` as
+4. In `Run/Debug Configurations` dialog, set `Active Profiles` as
 
     ```
     dev
     ```
 
 5. Create **compose.yaml** (see [`compose.example.yaml`](compose.example.yaml))
-6. Create **application-dev.yaml** (see [`application-dev.example.yaml`](src/main/resources/application-dev.example.yaml))
+6. Create **application-dev.properties** (see [`application-dev.example.properties`](src/main/resources/application-dev.example.properties))
 7. Start `Docker Deamon`
 8. Create and start containers
 

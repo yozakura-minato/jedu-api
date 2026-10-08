@@ -3,16 +3,18 @@ package com.jsal.jeduApi.employee.repository.mapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 /**
  * @author Yozakura Minato
  */
 @Component
-public class EmployeeParamsMapper {
+public class EmployeeParamMapper {
     /**
-     * @param displayId String
+     * @param id UUID
      * @return MapSqlParameterSource
      */
-    public MapSqlParameterSource displayIdToSelectParam(String displayId) {
-        return new MapSqlParameterSource().addValue("displayId", displayId);
+    public MapSqlParameterSource idToSelectParam(UUID id) {
+        return new MapSqlParameterSource().addValue("id", id);
     }
 }

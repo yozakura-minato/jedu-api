@@ -5,8 +5,8 @@ services:
     container_name: 'pgs'
     environment:
       - 'POSTGRES_DB=pgs'
-      - 'POSTGRES_PASSWORD=YOUR_PASSWORD' # <= TO FILL
-      - 'POSTGRES_USER=YOUR_USERNAME'     # <= TO FIL
+      - 'POSTGRES_PASSWORD=YOUR_PASSWORD' # ⇐ TO FILL
+      - 'POSTGRES_USER=YOUR_USERNAME'     # ⇐ TO FIL
       - 'TZ=Asia/Ho_Chi_Minh'
     ports:
       - '2345:5432'

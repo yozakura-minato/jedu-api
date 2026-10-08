@@ -42,7 +42,7 @@ public class StudentController {
     ) {
         UUID currentUserId = CommonConstant.CURRENT_EMPLOYEE_ID;
         StudentDisplayIdResponse displayId = studentApiService.create(createRequest, currentUserId);
-        return ResponseEntity.ok(ApiResponse.data(displayId));
+        return ResponseEntity.ok(ApiResponse.success(displayId));
     }
 
     @GetMapping(path = "/api/v1/students/all")
@@ -50,7 +50,7 @@ public class StudentController {
             * Return data: List of StudentProfile""")
     public ResponseEntity<ApiResponse<List<StudentProfile>>> findAllProfiles() {
         List<StudentProfile> profileList = studentApiService.findAllProfiles();
-        return ResponseEntity.ok(ApiResponse.data(profileList));
+        return ResponseEntity.ok(ApiResponse.success(profileList));
     }
 
     @GetMapping(path = "/api/v1/students/display-id/{displayId}")
@@ -65,6 +65,6 @@ public class StudentController {
             String displayId
     ) {
         StudentProfile profile = studentApiService.findProfileByDisplayId(displayId);
-        return ResponseEntity.ok(ApiResponse.data(profile));
+        return ResponseEntity.ok(ApiResponse.success(profile));
     }
 }

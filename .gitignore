@@ -37,4 +37,4 @@ out/
 
 ### Dev files ###
 compose.yaml
-application-dev.yaml
+application-dev.properties
