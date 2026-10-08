@@ -41,7 +41,7 @@ class EmployeeServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return title list WHEN called")
         void findAllTitles_success() {
             // Arrange
-            var expectedTitleList = EmployeeTitle.listMock();
+            var expectedTitleList = EmployeeTitle.mockList();
 
             when(employeeRepository.selectAllTitles()).thenReturn(expectedTitleList);
 

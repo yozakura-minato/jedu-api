@@ -17,7 +17,7 @@ public record EmployeeTitle(
     /**
      * @return List of EmployeeTitle
      */
-    public static List<EmployeeTitle> listMock() {
+    public static List<EmployeeTitle> mockList() {
         return List.of(
                 new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
                 new EmployeeTitle(UUID.randomUUID(), "ID02", "Tester 02"),
