@@ -1,7 +1,7 @@
 package com.jsal.jeduApi.employee.repository;
 
 import com.jsal.jeduApi.employee.repository.mapper.EmployeeParamMapper;
-import com.jsal.jeduApi.employee.repository.mapper.EmployeeRowMapper;
+import com.jsal.jeduApi.employee.repository.mapper.EmployeeResultMapper;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,18 @@ import java.util.UUID;
 public class EmployeeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final EmployeeParamMapper employeeParamMapper;
-    private final EmployeeRowMapper employeeRowMapper;
+    private final EmployeeResultMapper employeeResultMapper;
 
     /**
      * @return List of EmployeeTitle
      */
     public List<EmployeeTitle> selectAllTitles() {
-        String selectSql = """
+        String query = """
                 select e.id, e.display_id, e.full_name
                 from employees e
                 where e.is_deleted = false;""";
 
-        return jdbcTemplate.query(selectSql, employeeRowMapper.titleRowMapper());
+        return jdbcTemplate.query(query, employeeResultMapper.toTitle());
     }
 
     /**
@@ -40,7 +40,7 @@ public class EmployeeRepository {
      * @return Optional of EmployeeProfile
      */
     public Optional<EmployeeProfile> selectProfileById(UUID id) {
-        String selectSql = """
+        String query = """
                 select
                     e.id,
                     e.display_id,
@@ -55,8 +55,8 @@ public class EmployeeRepository {
                         and d.is_deleted = false
                 where e.id = :id
                 and e.is_deleted = false;""";
-        MapSqlParameterSource selectParam = employeeParamMapper.idToSelectParam(id);
+        MapSqlParameterSource param = employeeParamMapper.fromId(id);
 
-        return jdbcTemplate.query(selectSql, selectParam, employeeRowMapper.profileRowMapper()).stream().findFirst();
+        return jdbcTemplate.query(query, param, employeeResultMapper.toProfile()).stream().findFirst();
     }
 }

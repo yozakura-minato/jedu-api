@@ -14,7 +14,7 @@ public class EmployeeParamMapper {
      * @param id UUID
      * @return MapSqlParameterSource
      */
-    public MapSqlParameterSource idToSelectParam(UUID id) {
+    public MapSqlParameterSource fromId(UUID id) {
         return new MapSqlParameterSource().addValue("id", id);
     }
 }

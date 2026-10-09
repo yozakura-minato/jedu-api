@@ -13,22 +13,20 @@ import java.util.List;
  * @author Yozakura Minato
  */
 @Component
-public class EmployeeRowMapper {
+public class EmployeeResultMapper {
     /**
      * @return RowMapper of EmployeeTitle
      */
-    public RowMapper<EmployeeTitle> titleRowMapper() {
+    public RowMapper<EmployeeTitle> toTitle() {
         return JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id")
-                .newRowMapper(EmployeeTitle.class);
+                .addKeys("id").newRowMapper(EmployeeTitle.class);
     }
 
     /**
-     * @return ResultSetExtractor of EmployeeProfile
+     * @return ResultSetExtractor of EmployeeProfile List
      */
-    public ResultSetExtractor<List<EmployeeProfile>> profileRowMapper() {
+    public ResultSetExtractor<List<EmployeeProfile>> toProfile() {
         return JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id")
-                .newResultSetExtractor(EmployeeProfile.class);
+                .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
     }
 }
