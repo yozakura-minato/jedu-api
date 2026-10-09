@@ -16,6 +16,9 @@ public interface EmployeeApiService {
     List<EmployeeTitle> findAllTitles();
 
     /**
+     * Find by {@code id}.
+     * If exists then return, else then throw exception.
+     *
      * @param id UUID
      * @return EmployeeProfile
      * @throws com.jsal.jeduApi.common.exception.ResourceNotFoundException when {@code employeeId} is not found

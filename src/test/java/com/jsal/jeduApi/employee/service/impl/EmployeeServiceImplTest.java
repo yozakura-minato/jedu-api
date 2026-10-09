@@ -29,7 +29,7 @@ class EmployeeServiceImplTest {
     private EmployeeRepository employeeRepository;
 
     @InjectMocks
-    private EmployeeServiceImpl employeeApiService;
+    private EmployeeServiceImpl employeeService;
 
     /**
      * @author Yozakura Minato
@@ -42,16 +42,15 @@ class EmployeeServiceImplTest {
         void findAllTitles_success() {
             // Arrange
             var expectedTitleList = EmployeeTitle.mockList();
-
             when(employeeRepository.selectAllTitles()).thenReturn(expectedTitleList);
 
             // Act
-            var actualTitleList = employeeApiService.findAllTitles();
+            var actualTitleList = employeeService.findAllTitles();
 
             // Assert
-            verify(employeeRepository, times(1)).selectAllTitles();
-
             assertEquals(expectedTitleList, actualTitleList);
+
+            verify(employeeRepository, times(1)).selectAllTitles();
         }
     }
 
@@ -61,7 +60,7 @@ class EmployeeServiceImplTest {
     @Nested
     @DisplayName(value = "Test for: findProfileById")
     class FindProfileByIdTest {
-        public static final UUID ID = UUID.randomUUID();
+        private static final UUID ID = UUID.randomUUID();
 
         @Test
         @DisplayName(value = "Scenario 1: SHOULD return employeeProfile WHEN displayId is valid")
@@ -71,12 +70,12 @@ class EmployeeServiceImplTest {
             when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.of(expectedProfile));
 
             // Act
-            var actualProfile = employeeApiService.findProfileById(ID);
+            var actualProfile = employeeService.findProfileById(ID);
 
             // Assert
-            verify(employeeRepository, times(1)).selectProfileById(ID);
-
             assertEquals(expectedProfile, actualProfile);
+
+            verify(employeeRepository, times(1)).selectProfileById(ID);
         }
 
         @Test
@@ -86,14 +85,12 @@ class EmployeeServiceImplTest {
             when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.empty());
 
             // Act
-            var exception = assertThrows(
-                    ResourceNotFoundException.class, () -> employeeApiService.findProfileById(ID)
-            );
+            var exception = assertThrows(ResourceNotFoundException.class, () -> employeeService.findProfileById(ID));
 
             // Assert
-            verify(employeeRepository, times(1)).selectProfileById(ID);
-
             assertEquals(EmployeeMessage.Id.NOT_FOUND, exception.getMessage());
+
+            verify(employeeRepository, times(1)).selectProfileById(ID);
         }
     }
 }
