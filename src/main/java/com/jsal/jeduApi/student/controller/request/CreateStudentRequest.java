@@ -36,4 +36,16 @@ public record CreateStudentRequest(
         @StrongPassword(message = StudentMessage.Password.WEAK)
         String password
 ) {
+    /**
+     * @return CreateStudentRequest
+     */
+    public static CreateStudentRequest mock() {
+        return new CreateStudentRequest(
+                "id4tester",
+                "Tester",
+                "tester@jedu.dev",
+                null,
+                "pw4tester"
+        );
+    }
 }
