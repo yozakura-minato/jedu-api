@@ -64,7 +64,7 @@ public class StudentController {
             - Fail when: id is not found""")
     public ResponseEntity<ApiResponse<StudentProfile>> findProfileByDisplayId(
             @PathVariable
-            @NotNull(message = StudentMessage.DisplayId.NULL)
+            @NotNull(message = StudentMessage.Id.NULL)
             UUID id
     ) {
         StudentProfile profile = studentApiService.findProfileById(id);
