@@ -12,9 +12,11 @@ import java.util.UUID;
  */
 public interface StudentApiService {
     /**
+     * Validate unique fields {@code displayId} & {@code id}.
+     * If valid then create, else then throw exception.
+     *
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
-     * @throws com.jsal.jeduApi.common.exception.ResourceConflictException if unique fields is conflicts
      */
     void create(CreateStudentRequest request, UUID currentUserId);
 
@@ -24,6 +26,9 @@ public interface StudentApiService {
     List<StudentTitle> findAllTitles();
 
     /**
+     * Find by {@code id}.
+     * If exists then return, else then throw exception.
+     *
      * @param id UUID
      * @return StudentProfile
      * @throws com.jsal.jeduApi.common.exception.ResourceNotFoundException if {@code id} is not found
