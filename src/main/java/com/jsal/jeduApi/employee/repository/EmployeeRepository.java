@@ -1,10 +1,11 @@
 package com.jsal.jeduApi.employee.repository;
 
-import com.jsal.jeduApi.employee.repository.mapper.EmployeeParamMapper;
-import com.jsal.jeduApi.employee.repository.mapper.EmployeeResultMapper;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import lombok.RequiredArgsConstructor;
+import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,19 +21,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final EmployeeParamMapper employeeParamMapper;
-    private final EmployeeResultMapper employeeResultMapper;
 
     /**
      * @return List of EmployeeTitle
      */
     public List<EmployeeTitle> selectAllTitles() {
-        String query = """
+        String sql = """
                 select e.id, e.display_id, e.full_name
                 from employees e
                 where e.is_deleted = false;""";
+        RowMapper<EmployeeTitle> mapper = JdbcTemplateMapperFactory.newInstance()
+                .addKeys("id").newRowMapper(EmployeeTitle.class);
 
-        return jdbcTemplate.query(query, employeeResultMapper.toTitle());
+        return jdbcTemplate.query(sql, mapper);
     }
 
     /**
@@ -40,7 +41,7 @@ public class EmployeeRepository {
      * @return Optional of EmployeeProfile
      */
     public Optional<EmployeeProfile> selectProfileById(UUID id) {
-        String query = """
+        String sql = """
                 select
                     e.id,
                     e.display_id,
@@ -55,8 +56,10 @@ public class EmployeeRepository {
                         and d.is_deleted = false
                 where e.id = :id
                 and e.is_deleted = false;""";
-        MapSqlParameterSource param = employeeParamMapper.fromId(id);
+        MapSqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+        ResultSetExtractor<List<EmployeeProfile>> extractor = JdbcTemplateMapperFactory.newInstance()
+                .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
 
-        return jdbcTemplate.query(query, param, employeeResultMapper.toProfile()).stream().findFirst();
+        return jdbcTemplate.query(sql, param, extractor).stream().findFirst();
     }
 }
