@@ -1,11 +1,10 @@
 package com.jsal.jeduApi.student.controller;
 
-import com.jsal.jeduApi.common.annotation.TrimmedString;
 import com.jsal.jeduApi.common.response.ApiResponse;
 import com.jsal.jeduApi.common.util.CommonConstant;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.service.StudentApiService;
 import com.jsal.jeduApi.student.util.StudentMessage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,41 +29,45 @@ public class StudentController {
     private final StudentApiService studentApiService;
 
     @PostMapping(path = "/api/v1/students")
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create student", description = """
-            * Request body: createRequest - CreateStudentRequest
-            * Return data: StudentDisplayIdResponse
-            * Return error: when displayId or email is conflicts""")
-    public ResponseEntity<ApiResponse<StudentDisplayIdResponse>> create(
+            - Request body: CreateStudentRequest
+            - Validation:
+                - displayId (not null, trimmed)
+                - fullName (not null, trimmed)
+                - email (not null, email)
+                - phoneNumber (trimmed)
+                - password (not null trimmed)
+            - Fail when: displayId or email is conflicts, or validation failed""")
+    public ResponseEntity<ApiResponse<?>> create(
             @RequestBody
             @Valid
             CreateStudentRequest createRequest
     ) {
         UUID currentUserId = CommonConstant.CURRENT_EMPLOYEE_ID;
-        StudentDisplayIdResponse displayId = studentApiService.create(createRequest, currentUserId);
-        return ResponseEntity.ok(ApiResponse.success(displayId));
+        studentApiService.create(createRequest, currentUserId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(null));
     }
 
     @GetMapping(path = "/api/v1/students/all")
-    @Operation(summary = "Find all StudentProfiles", description = """
-            * Return data: List of StudentProfile""")
-    public ResponseEntity<ApiResponse<List<StudentProfile>>> findAllProfiles() {
-        List<StudentProfile> profileList = studentApiService.findAllProfiles();
-        return ResponseEntity.ok(ApiResponse.success(profileList));
+    @Operation(summary = "Find all StudentTitles", description = """
+            - When success: return List of StudentTitle""")
+    public ResponseEntity<ApiResponse<List<StudentTitle>>> findAllProfiles() {
+        List<StudentTitle> titleList = studentApiService.findAllTitles();
+        return ResponseEntity.ok(ApiResponse.success(titleList));
     }
 
-    @GetMapping(path = "/api/v1/students/display-id/{displayId}")
-    @Operation(summary = "Find StudentProfile by displayId", description = """
-            * Path variable: displayId - String
-            * Return data: StudentProfile
-            * Return error: when displayId is not found""")
+    @GetMapping(path = "/api/v1/students/id/{id}")
+    @Operation(summary = "Find StudentProfile by id", description = """
+            - Path variable: id - UUID
+            - Validation: id (not null)
+            - When success: return StudentProfile
+            - Fail when: id is not found""")
     public ResponseEntity<ApiResponse<StudentProfile>> findProfileByDisplayId(
             @PathVariable
             @NotNull(message = StudentMessage.DisplayId.NULL)
-            @TrimmedString(message = StudentMessage.DisplayId.NOT_TRIMMED)
-            String displayId
+            UUID id
     ) {
-        StudentProfile profile = studentApiService.findProfileByDisplayId(displayId);
+        StudentProfile profile = studentApiService.findProfileById(id);
         return ResponseEntity.ok(ApiResponse.success(profile));
     }
 }

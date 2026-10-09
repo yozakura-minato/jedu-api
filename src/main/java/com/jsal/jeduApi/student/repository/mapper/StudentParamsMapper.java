@@ -13,13 +13,24 @@ import java.util.UUID;
 @Component
 public class StudentParamsMapper {
     /**
+     * @param displayId String
+     * @param email     String
+     * @return MapSqlParameterSource
+     */
+    public MapSqlParameterSource fromDisplayIdAndEmail(String displayId, String email) {
+        return new MapSqlParameterSource()
+                .addValue("displayId", displayId)
+                .addValue("email", email);
+    }
+
+    /**
      * Create MapSqlParameterSource for student with CREATED status
      *
      * @param createRequest CreateStudentRequest
      * @param currentUserId UUID: createdBy
      * @return MapSqlParameterSource
      */
-    public MapSqlParameterSource createRequestToInsertParams(CreateStudentRequest createRequest, UUID currentUserId) {
+    public MapSqlParameterSource fromCreateRequest(CreateStudentRequest createRequest, UUID currentUserId) {
         return new MapSqlParameterSource()
                 .addValue("displayId", createRequest.displayId())
                 .addValue("fullName", createRequest.fullName())
@@ -32,21 +43,10 @@ public class StudentParamsMapper {
     }
 
     /**
-     * @param displayId String
-     * @param email     String
+     * @param id UUID
      * @return MapSqlParameterSource
      */
-    public MapSqlParameterSource displayIdAndEmailToSelectParams(String displayId, String email) {
-        return new MapSqlParameterSource()
-                .addValue("displayId", displayId)
-                .addValue("email", email);
-    }
-
-    /**
-     * @param displayId String
-     * @return MapSqlParameterSource
-     */
-    public MapSqlParameterSource displayIdToSelectParam(String displayId) {
-        return new MapSqlParameterSource().addValue("displayId", displayId);
+    public MapSqlParameterSource fromId(UUID id) {
+        return new MapSqlParameterSource().addValue("id", id);
     }
 }

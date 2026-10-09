@@ -2,10 +2,11 @@ package com.jsal.jeduApi.student.repository;
 
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.repository.mapper.StudentParamsMapper;
+import com.jsal.jeduApi.student.repository.mapper.StudentResultMapper;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,18 +23,39 @@ import java.util.UUID;
 public class StudentRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final StudentParamsMapper studentParamsMapper;
-
-    private static final DataClassRowMapper<StudentProfile> studentProfileRowMapper
-            = DataClassRowMapper.newInstance(StudentProfile.class);
-    private static final DataClassRowMapper<StudentUniqueValidation> studentUniqueValidationMapper
-            = DataClassRowMapper.newInstance(StudentUniqueValidation.class);
+    private final StudentResultMapper studentResultMapper;
 
     /**
-     * @param insertParams Map of String keys and any values
-     * @return true if affectedRows == 1, or else false
+     * @param displayId String
+     * @param email     Strong
+     * @return Optional of StudentUniqueValidation
      */
-    public boolean insert(CreateStudentRequest createRequest, UUID currentUserId) {
-        String insertSql = """
+    public Optional<StudentUniqueValidation> existsByDisplayIdOrEmail(String displayId, String email) {
+        String query = """
+                select
+                    exists (
+                        select 1
+                        from students s
+                        where s.display_id = :displayId
+                        and s.is_deleted = false
+                    ) as exists_by_display_id,
+                    exists (
+                        select 1
+                        from students s
+                        where s.email = :email
+                        and s.is_deleted = false
+                    ) as exists_by_email;""";
+        MapSqlParameterSource param = studentParamsMapper.fromDisplayIdAndEmail(displayId, email);
+        return jdbcTemplate.query(query, param, studentResultMapper.toUniqueValidation()).stream().findFirst();
+    }
+
+    /**
+     * @param createRequest CreateStudentRequest
+     * @param currentUserId UUID
+     * @return int: the number of rows affected
+     */
+    public int insert(CreateStudentRequest createRequest, UUID currentUserId) {
+        String query = """
                 insert into students (
                     display_id,
                     full_name,
@@ -53,63 +75,34 @@ public class StudentRepository {
                     now(),
                     :createdBy
                 );""";
-        MapSqlParameterSource insertParams = studentParamsMapper.createRequestToInsertParams(
-                createRequest, currentUserId
-        );
-
-        int affectedRows = jdbcTemplate.update(insertSql, insertParams);
-        return affectedRows == 1;
+        MapSqlParameterSource param = studentParamsMapper.fromCreateRequest(createRequest, currentUserId);
+        return jdbcTemplate.update(query, param);
     }
 
     /**
-     * @param displayId String
-     * @param email     Strong
-     * @return Optional of StudentUniqueValidation
+     * @return List of StudentTitle
      */
-    public Optional<StudentUniqueValidation> existsByDisplayIdOrEmail(String displayId, String email) {
-        String selectSql = """
-                select
-                    exists (
-                        select 1
-                        from students s
-                        where s.display_id = :displayId
-                        and s.is_deleted = false
-                    ) as exists_by_display_id,
-                    exists (
-                        select 1
-                        from students s
-                        where s.email = :email
-                        and s.is_deleted = false
-                    ) as exists_by_email;""";
-        MapSqlParameterSource selectParms = studentParamsMapper.displayIdAndEmailToSelectParams(displayId, email);
-
-        return jdbcTemplate.query(selectSql, selectParms, studentUniqueValidationMapper).stream().findFirst();
-    }
-
-    /**
-     * @return List of StudentProfile
-     */
-    public List<StudentProfile> selectAllProfiles() {
-        String selectSql = """
-                select s.display_id, s.full_name, s.email, s.phone_number, s.status
+    public List<StudentTitle> selectAllTitles() {
+        String query = """
+                select s.id, s.display_id, s.full_name
                 from students s
                 where s.is_deleted is false;""";
 
-        return jdbcTemplate.query(selectSql, studentProfileRowMapper);
+        return jdbcTemplate.query(query, studentResultMapper.toTitle());
     }
 
     /**
-     * @param displayId String
+     * @param id UUID
      * @return Optional of StudentProfile
      */
-    public Optional<StudentProfile> selectProfileByDisplayId(String displayId) {
-        String selectSql = """
-                select s.display_id, s.full_name, s.email, s.phone_number, s.status
+    public Optional<StudentProfile> selectProfileById(UUID id) {
+        String query = """
+                select s.id, s.display_id, s.full_name, s.email, s.phone_number, s.status
                 from students s
-                where s.display_id = :displayId
+                where s.id = :id
                 and s.is_deleted is false;""";
-        MapSqlParameterSource selectParam = studentParamsMapper.displayIdToSelectParam(displayId);
+        MapSqlParameterSource param = studentParamsMapper.fromId(id);
 
-        return jdbcTemplate.query(selectSql, selectParam, studentProfileRowMapper).stream().findFirst();
+        return jdbcTemplate.query(query, param, studentResultMapper.toProfile()).stream().findFirst();
     }
 }

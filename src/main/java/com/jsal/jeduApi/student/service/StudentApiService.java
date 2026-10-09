@@ -1,8 +1,8 @@
 package com.jsal.jeduApi.student.service;
 
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,20 +14,19 @@ public interface StudentApiService {
     /**
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
-     * @return StudentDisplayIdResponse
      * @throws com.jsal.jeduApi.common.exception.ResourceConflictException if unique fields is conflicts
      */
-    StudentDisplayIdResponse create(CreateStudentRequest request, UUID currentUserId);
+    void create(CreateStudentRequest request, UUID currentUserId);
 
     /**
-     * @return List of StudentProfile
+     * @return List of StudentTitle
      */
-    List<StudentProfile> findAllProfiles();
+    List<StudentTitle> findAllTitles();
 
     /**
-     * @param displayId String
+     * @param id UUID
      * @return StudentProfile
-     * @throws com.jsal.jeduApi.common.exception.ResourceNotFoundException if {@code displayId} is not found
+     * @throws com.jsal.jeduApi.common.exception.ResourceNotFoundException if {@code id} is not found
      */
-    StudentProfile findProfileByDisplayId(String displayId);
+    StudentProfile findProfileById(UUID id);
 }

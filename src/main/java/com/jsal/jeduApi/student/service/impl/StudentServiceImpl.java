@@ -3,11 +3,11 @@ package com.jsal.jeduApi.student.service.impl;
 import com.jsal.jeduApi.common.exception.ResourceConflictException;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.common.exception.SqlExecutionException;
-import com.jsal.jeduApi.common.util.CommonMessage;
+import com.jsal.jeduApi.persistence.util.PersistenceLocalizedMessage;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
 import com.jsal.jeduApi.student.repository.StudentRepository;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.service.StudentApiService;
 import com.jsal.jeduApi.student.util.StudentMessage;
@@ -31,11 +31,10 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Transactional
     @Override
-    public StudentDisplayIdResponse create(CreateStudentRequest createRequest, UUID currentUserId) {
-        // Validate unique constraints
+    public void create(CreateStudentRequest createRequest, UUID currentUserId) {
         StudentUniqueValidation uniqueValidation = studentRepository.existsByDisplayIdOrEmail(
                 createRequest.displayId(), createRequest.email()
-        ).orElseThrow(() -> new SqlExecutionException(CommonMessage.SqlExecution.SELECT_FAILED));
+        ).orElseThrow(() -> new SqlExecutionException(PersistenceLocalizedMessage.SqlExecution.SELECT_FAIL));
         if (uniqueValidation.existsByDisplayId()) {
             throw new ResourceConflictException(StudentMessage.DisplayId.CONFLICT);
         }
@@ -43,28 +42,26 @@ public class StudentServiceImpl implements StudentApiService {
             throw new ResourceConflictException(StudentMessage.Email.CONFLICT);
         }
 
-        // Create & return
-        boolean isSucceed = studentRepository.insert(createRequest, currentUserId);
-        if (!isSucceed) {
-            throw new SqlExecutionException(CommonMessage.SqlExecution.INSERT_FAILED);
+        int affectedRowsNumber = studentRepository.insert(createRequest, currentUserId);
+        if (affectedRowsNumber != 1) {
+            throw new SqlExecutionException(PersistenceLocalizedMessage.SqlExecution.INSERT_FAIL);
         }
-        return new StudentDisplayIdResponse(createRequest.displayId());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<StudentProfile> findAllProfiles() {
-        return studentRepository.selectAllProfiles();
+    public List<StudentTitle> findAllTitles() {
+        return studentRepository.selectAllTitles();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public StudentProfile findProfileByDisplayId(String displayId) {
-        return studentRepository.selectProfileByDisplayId(displayId)
+    public StudentProfile findProfileById(UUID id) {
+        return studentRepository.selectProfileById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.DisplayId.NOT_FOUND));
     }
 }
