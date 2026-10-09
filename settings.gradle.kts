@@ -1,1 +1,1 @@
-rootProject.name = "jeduApi"
+rootProject.name = "jedu-api"
