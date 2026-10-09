@@ -33,4 +33,16 @@ public record CreateStudentRequest(
         @TrimmedString(message = StudentMessage.Password.NOT_TRIMMED)
         String password
 ) {
+    /**
+     * @return CreateStudentRequest
+     */
+    public static CreateStudentRequest mock() {
+        return new CreateStudentRequest(
+                "id4tester",
+                "Tester",
+                "tester@jedu.dev",
+                null,
+                "pw4tester"
+        );
+    }
 }
