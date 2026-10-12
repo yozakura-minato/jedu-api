@@ -1,4 +1,4 @@
-### create_Success_HasPhoneNumber
+### createStudent_Success_HasPhoneNumber
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -12,7 +12,7 @@ Content-Type: {{json}}
 }
 
 > {%
-    client.test("SHOULD return created id WHEN request is valid", () => {
+    client.test("SHOULD return created student id WHEN request is valid with phone number", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -21,7 +21,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Success_NoPhoneNumber
+### createStudent_Success_NoPhoneNumber
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -35,7 +35,7 @@ Content-Type: {{json}}
 }
 
 > {%
-    client.test("SHOULD return created id WHEN request is valid", () => {
+    client.test("SHOULD return created student id WHEN request is valid without phone number", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -44,7 +44,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_DisplayId_Conflict
+### createStudent_DisplayId_Conflict
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -67,7 +67,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Email_Conflict
+### createStudent_Email_Conflict
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -90,7 +90,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_DisplayId_Null
+### createStudent_DisplayId_Null
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -113,7 +113,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_DisplayId_NotTrimmed
+### createStudent_DisplayId_NotTrimmed
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -136,7 +136,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_FullName_Null
+### createStudent_FullName_Null
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -159,7 +159,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_FullName_NotTrimmed
+### createStudent_FullName_NotTrimmed
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -182,7 +182,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Email_Null
+### createStudent_Email_Null
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -205,7 +205,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Email_InvalidFormat
+### createStudent_Email_InvalidFormat
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -228,7 +228,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_PhoneNumber_InvalidFormat
+### createStudent_PhoneNumber_InvalidFormat
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -251,7 +251,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Password_Null
+### createStudent_Password_Null
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}
@@ -274,7 +274,7 @@ Content-Type: {{json}}
     });
 %}
 
-### create_Password_NotTrimmed
+### createStudent_Password_NotTrimmed
 POST {{host}}/{{api.v1}}
     /students
 Content-Type: {{json}}

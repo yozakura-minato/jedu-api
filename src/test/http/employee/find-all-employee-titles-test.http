@@ -1,10 +1,10 @@
-### findAllTitles_Success
+### findAllEmployeeTitles_Success
 GET {{host}}/{{api.v1}}
     /employees/all
 Content-Type: {{json}}
 
 > {%
-    client.test("SHOULD return title list WHEN is called", () => {
+    client.test("SHOULD return employee title list", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);

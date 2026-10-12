@@ -38,23 +38,23 @@ class EmployeeServiceImplTest {
      */
     @Nested
     @DisplayName(value = "Test for: findAllEmployeeTitles")
-    class FindAllTitlesTest {
+    class FindAllEmployeeTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return title list WHEN called")
-        void findAllTitles_success() {
+        @DisplayName(value = "Scenario 1: SHOULD return employee title list")
+        void findAllEmployeeTitles_success() {
             // Arrange
-            var expectedTitleList = List.of(
+            var expectedEmployeeTitleList = List.of(
                     new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
                     new EmployeeTitle(UUID.randomUUID(), "ID02", "Tester 02"),
                     new EmployeeTitle(UUID.randomUUID(), "ID03", "Tester 03")
             );
-            when(employeeRepository.selectAllEmployeeTitles()).thenReturn(expectedTitleList);
+            when(employeeRepository.selectAllEmployeeTitles()).thenReturn(expectedEmployeeTitleList);
 
             // Act
-            var actualTitleList = employeeService.findAllEmployeeTitles();
+            var actualEmployeeTitleList = employeeService.findAllEmployeeTitles();
 
             // Assert
-            assertEquals(expectedTitleList, actualTitleList);
+            assertEquals(expectedEmployeeTitleList, actualEmployeeTitleList);
 
             verify(employeeRepository, times(1)).selectAllEmployeeTitles();
         }
@@ -65,15 +65,15 @@ class EmployeeServiceImplTest {
      */
     @Nested
     @DisplayName(value = "Test for: findEmployeeProfileById")
-    class FindProfileByIdTest {
-        private static final UUID ID = UUID.randomUUID();
+    class FindEmployeeProfileByIdTest {
+        private static final UUID EMPLOYEE_ID = UUID.randomUUID();
 
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employeeProfile WHEN displayId is valid")
-        void findProfileById_Success() {
+        @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN id exists")
+        void findEmployeeProfileById_Success() {
             // Arrange
-            var expectedProfile = new EmployeeProfile(
-                    ID,
+            var expectedEmployeeProfile = new EmployeeProfile(
+                    EMPLOYEE_ID,
                     "id4tester",
                     "JEDU Tester",
                     "tester@jedu.dev",
@@ -81,30 +81,32 @@ class EmployeeServiceImplTest {
                     EmployeeStatus.ACTIVE,
                     List.of("Department 1", "Department 2", "Department 3")
             );
-            when(employeeRepository.selectEmployeeProfileById(ID)).thenReturn(Optional.of(expectedProfile));
+            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID))
+                    .thenReturn(Optional.of(expectedEmployeeProfile));
 
             // Act
-            var actualProfile = employeeService.findEmployeeProfileById(ID);
+            var actualEmployeeProfile = employeeService.findEmployeeProfileById(EMPLOYEE_ID);
 
             // Assert
-            assertEquals(expectedProfile, actualProfile);
+            assertEquals(expectedEmployeeProfile, actualEmployeeProfile);
 
-            verify(employeeRepository, times(1)).selectEmployeeProfileById(ID);
+            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN displayId is not found")
-        void findProfileById_DisplayIdNotFound() {
+        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN id is not found")
+        void findEmployeeProfileById_IdNotFound() {
             // Arrange
-            when(employeeRepository.selectEmployeeProfileById(ID)).thenReturn(Optional.empty());
+            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
             // Act
-            var exception = assertThrows(ResourceNotFoundException.class, () -> employeeService.findEmployeeProfileById(ID));
+            var exception = assertThrows(ResourceNotFoundException.class,
+                    () -> employeeService.findEmployeeProfileById(EMPLOYEE_ID));
 
             // Assert
             assertEquals(EmployeeMessage.Id.NOT_FOUND, exception.getMessage());
 
-            verify(employeeRepository, times(1)).selectEmployeeProfileById(ID);
+            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
         }
     }
 }

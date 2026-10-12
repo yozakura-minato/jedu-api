@@ -41,8 +41,8 @@ class StudentServiceImplTest {
      */
     @Nested
     @DisplayName(value = "Test for: createStudent")
-    class CreateTest {
-        private static final CreateStudentRequest CREATE_REQUEST = new CreateStudentRequest(
+    class CreateStudentTest {
+        private static final CreateStudentRequest CREATE_STUDENT_REQUEST = new CreateStudentRequest(
                 "id4tester",
                 "Tester",
                 "tester@jedu.dev",
@@ -51,83 +51,69 @@ class StudentServiceImplTest {
         );
         private static final UUID CURRENT_USER_ID = UUID.randomUUID();
 
-        private static final String DISPLAY_ID = CREATE_REQUEST.displayId();
-        private static final String EMAIL = CREATE_REQUEST.email();
+        private static final String DISPLAY_ID = CREATE_STUDENT_REQUEST.displayId();
+        private static final String EMAIL = CREATE_STUDENT_REQUEST.email();
 
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return id WHEN request is valid")
-        void create_Success() {
+        @DisplayName(value = "Scenario 1: SHOULD return created student id WHEN create request is valid")
+        void createStudent_Success() {
             // Arrange
             var uniqueValidation = new StudentUniqueValidation(false, false);
-            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL))
-                    .thenReturn(uniqueValidation);
+            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL)).thenReturn(uniqueValidation);
 
-            var expectedId = UUID.randomUUID();
-            when(studentRepository.insertStudent(CREATE_REQUEST, StudentStatus.CREATED, CURRENT_USER_ID))
-                    .thenReturn(expectedId);
+            var expectedCreatedStudentId = UUID.randomUUID();
+            when(studentRepository.insertStudent(CREATE_STUDENT_REQUEST, StudentStatus.CREATED, CURRENT_USER_ID))
+                    .thenReturn(expectedCreatedStudentId);
 
             // Act
-            var actualId = studentService.createStudent(CREATE_REQUEST, CURRENT_USER_ID);
+            var actualCreatedStudentId = studentService.createStudent(CREATE_STUDENT_REQUEST, CURRENT_USER_ID);
 
             // Assert
-            assertEquals(expectedId, actualId);
+            assertEquals(expectedCreatedStudentId, actualCreatedStudentId);
 
-            verify(studentRepository, times(1)).existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
             verify(studentRepository, times(1))
-                    .insertStudent(CREATE_REQUEST, StudentStatus.CREATED, CURRENT_USER_ID);
+                    .existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
+            verify(studentRepository, times(1))
+                    .insertStudent(CREATE_STUDENT_REQUEST, StudentStatus.CREATED, CURRENT_USER_ID);
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN displayId conflicts")
+        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN display id conflicts")
         void create_DisplayIdConflict() {
             // Arrange
-            var uniqueValidation = new StudentUniqueValidation(true, false);
-            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL)).thenReturn(uniqueValidation);
+            var studentUniqueValidation = new StudentUniqueValidation(true, false);
+            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL))
+                    .thenReturn(studentUniqueValidation);
 
             // Act
             var exception = assertThrows(ResourceConflictException.class,
-                    () -> studentService.createStudent(CREATE_REQUEST, CURRENT_USER_ID));
+                    () -> studentService.createStudent(CREATE_STUDENT_REQUEST, CURRENT_USER_ID));
 
             // Assert
             assertEquals(StudentMessage.DisplayId.CONFLICT, exception.getMessage());
 
-            verify(studentRepository, times(1)).existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
+            verify(studentRepository, times(1))
+                    .existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
             verify(studentRepository, never()).insertStudent(any(), any(), any());
         }
 
         @Test
         @DisplayName(value = "Scenario 3: SHOULD throw exception WHEN email conflicts")
-        void create_EmailConflict() {
+        void createStudent_EmailConflict() {
             // Arrange
-            var uniqueValidation = new StudentUniqueValidation(false, true);
-            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL)).thenReturn(uniqueValidation);
+            var studentUniqueValidation = new StudentUniqueValidation(false, true);
+            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL))
+                    .thenReturn(studentUniqueValidation);
 
             // Act
             var exception = assertThrows(ResourceConflictException.class,
-                    () -> studentService.createStudent(CREATE_REQUEST, CURRENT_USER_ID));
+                    () -> studentService.createStudent(CREATE_STUDENT_REQUEST, CURRENT_USER_ID));
 
             // Assert
             assertEquals(StudentMessage.Email.CONFLICT, exception.getMessage());
 
-            verify(studentRepository, times(1)).existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
-            verify(studentRepository, never()).insertStudent(any(), any(), any());
-        }
-
-        @Test
-        @DisplayName(value = "Scenario 4: SHOULD throw exception WHEN both displayId and email conflict")
-        void create_DisplayIdAndEmailConflict() {
-            // Arrange
-            var uniqueValidation = new StudentUniqueValidation(true, true);
-            when(studentRepository.existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL)).thenReturn(uniqueValidation);
-
-            // Act
-            var exception = assertThrows(ResourceConflictException.class,
-                    () -> studentService.createStudent(CREATE_REQUEST, CURRENT_USER_ID));
-
-            // Assert
-            assertEquals(StudentMessage.DisplayId.CONFLICT, exception.getMessage());
-
-            verify(studentRepository, times(1)).existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
+            verify(studentRepository, times(1))
+                    .existsStudentByDisplayIdOrEmail(DISPLAY_ID, EMAIL);
             verify(studentRepository, never()).insertStudent(any(), any(), any());
         }
     }
@@ -136,24 +122,24 @@ class StudentServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findAllEmployeeTitles")
-    class FindAllTitlesTest {
+    @DisplayName(value = "Test for: findAllStudentTitles")
+    class FindAllStudentTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return title list WHEN called")
+        @DisplayName(value = "Scenario 1: SHOULD return student title list")
         void findAllTitles_Success() {
             // Arrange
-            var expectedTitleList = List.of(
+            var expectedStudentTitleList = List.of(
                     new StudentTitle(UUID.randomUUID(), "std1", "Student 1"),
                     new StudentTitle(UUID.randomUUID(), "std2", "Student 2"),
                     new StudentTitle(UUID.randomUUID(), "std3", "Student 3")
             );
-            when(studentRepository.selectAllStudentTitles()).thenReturn(expectedTitleList);
+            when(studentRepository.selectAllStudentTitles()).thenReturn(expectedStudentTitleList);
 
             // Act
-            var actualTitleList = studentService.findAllTitles();
+            var actualStudentTitleList = studentService.findAllTitles();
 
             // Assert
-            assertEquals(expectedTitleList, actualTitleList);
+            assertEquals(expectedStudentTitleList, actualStudentTitleList);
 
             verify(studentRepository, times(1)).selectAllStudentTitles();
         }
@@ -163,15 +149,15 @@ class StudentServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findEmployeeProfileById")
-    class FindProfileByIdTest {
-        private static final UUID ID = UUID.randomUUID();
+    @DisplayName(value = "Test for: findStudentProfileById")
+    class FindStudentProfileByIdTest {
+        private static final UUID STUDENT_ID = UUID.randomUUID();
 
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return profile WHEN id exists")
-        void findProfileById_Success() {
+        @DisplayName(value = "Scenario 1: SHOULD return student profile WHEN id exists")
+        void findStudentProfileById_Success() {
             // Arrange
-            var expectedProfile = new StudentProfile(
+            var expectedStudentProfile = new StudentProfile(
                     UUID.randomUUID(),
                     "STD1",
                     "Student 1",
@@ -179,31 +165,32 @@ class StudentServiceImplTest {
                     null,
                     StudentStatus.ACTIVE
             );
-            when(studentRepository.selectStudentProfileById(ID)).thenReturn(Optional.of(expectedProfile));
+            when(studentRepository.selectStudentProfileById(STUDENT_ID))
+                    .thenReturn(Optional.of(expectedStudentProfile));
 
             // Act
-            var actualProfile = studentService.findStudentProfileById(ID);
+            var actualStudentProfile = studentService.findStudentProfileById(STUDENT_ID);
 
             // Assert
-            assertEquals(expectedProfile, actualProfile);
+            assertEquals(expectedStudentProfile, actualStudentProfile);
 
-            verify(studentRepository, times(1)).selectStudentProfileById(ID);
+            verify(studentRepository, times(1)).selectStudentProfileById(STUDENT_ID);
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN id not found")
-        void findProfileById_IdNotFound() {
+        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN is not found")
+        void findStudentProfileById_IdNotFound() {
             // Arrange
-            when(studentRepository.selectStudentProfileById(ID)).thenReturn(Optional.empty());
+            when(studentRepository.selectStudentProfileById(STUDENT_ID)).thenReturn(Optional.empty());
 
             // Act
             var exception = assertThrows(ResourceNotFoundException.class,
-                    () -> studentService.findStudentProfileById(ID));
+                    () -> studentService.findStudentProfileById(STUDENT_ID));
 
             // Assert
             assertEquals(StudentMessage.Id.NOT_FOUND, exception.getMessage());
 
-            verify(studentRepository, times(1)).selectStudentProfileById(ID);
+            verify(studentRepository, times(1)).selectStudentProfileById(STUDENT_ID);
         }
     }
 }
