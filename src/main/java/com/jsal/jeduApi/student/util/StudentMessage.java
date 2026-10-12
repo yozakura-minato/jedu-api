@@ -45,7 +45,7 @@ public class StudentMessage {
      * @author Yozakura Minato
      */
     public static class PhoneNumber {
-        public static final String NOT_TRIMMED = "student.phoneNumber.notTrimmed";
+        public static final String INVALID_FORMAT = "student.phoneNumber.invalidFormat";
     }
 
     /**

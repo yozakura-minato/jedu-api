@@ -9,9 +9,9 @@ import jakarta.validation.ConstraintValidatorContext;
  */
 public class TrimmedStringValidator implements ConstraintValidator<TrimmedString, String> {
     /**
-     * @param value   String to validate
-     * @param context context in which the constraint is evaluated
-     * @return true if {@code value} is null or is trimmed not blank String, or else false
+     * @param value   String
+     * @param context ConstraintValidatorContext
+     * @return boolean
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

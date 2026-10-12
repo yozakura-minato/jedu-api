@@ -1,5 +1,6 @@
 package com.jsal.jeduApi.student.controller.request;
 
+import com.jsal.jeduApi.common.annotation.PhoneNumber;
 import com.jsal.jeduApi.common.annotation.TrimmedString;
 import com.jsal.jeduApi.student.util.StudentMessage;
 import jakarta.validation.constraints.Email;
@@ -26,23 +27,11 @@ public record CreateStudentRequest(
         @Email(message = StudentMessage.Email.INVALID_FORMAT)
         String email,
 
-        @TrimmedString(message = StudentMessage.PhoneNumber.NOT_TRIMMED)
+        @PhoneNumber(message = StudentMessage.PhoneNumber.INVALID_FORMAT)
         String phoneNumber,
 
         @NotNull(message = StudentMessage.Password.NULL)
         @TrimmedString(message = StudentMessage.Password.NOT_TRIMMED)
         String password
 ) {
-    /**
-     * @return CreateStudentRequest
-     */
-    public static CreateStudentRequest mock() {
-        return new CreateStudentRequest(
-                "id4tester",
-                "Tester",
-                "tester@jedu.dev",
-                null,
-                "pw4tester"
-        );
-    }
 }

@@ -25,7 +25,7 @@ public class EmployeeRepository {
     /**
      * @return List of EmployeeTitle
      */
-    public List<EmployeeTitle> selectAllTitles() {
+    public List<EmployeeTitle> selectAllEmployeeTitles() {
         String sql = """
                 select e.id, e.display_id, e.full_name
                 from employees e
@@ -40,7 +40,7 @@ public class EmployeeRepository {
      * @param id UUID
      * @return Optional of EmployeeProfile
      */
-    public Optional<EmployeeProfile> selectProfileById(UUID id) {
+    public Optional<EmployeeProfile> selectEmployeeProfileById(UUID id) {
         String sql = """
                 select
                     e.id,

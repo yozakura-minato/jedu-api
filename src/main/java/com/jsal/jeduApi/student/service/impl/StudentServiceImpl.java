@@ -30,17 +30,17 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Transactional
     @Override
-    public void create(CreateStudentRequest createRequest, UUID currentUserId) {
-        StudentUniqueValidation uniqueValidation = studentRepository
-                .existsByDisplayIdOrEmail(createRequest.displayId(), createRequest.email());
-        if (uniqueValidation.existsByDisplayId()) {
+    public UUID createStudent(CreateStudentRequest createRequest, UUID currentUserId) {
+        StudentUniqueValidation studentUniqueValidation = studentRepository
+                .existsStudentByDisplayIdOrEmail(createRequest.displayId(), createRequest.email());
+        if (studentUniqueValidation.existsByDisplayId()) {
             throw new ResourceConflictException(StudentMessage.DisplayId.CONFLICT);
         }
-        if (uniqueValidation.existsByEmail()) {
+        if (studentUniqueValidation.existsByEmail()) {
             throw new ResourceConflictException(StudentMessage.Email.CONFLICT);
         }
 
-        studentRepository.insert(createRequest, StudentStatus.CREATED, currentUserId);
+        return studentRepository.insertStudent(createRequest, StudentStatus.CREATED, currentUserId);
     }
 
     /**
@@ -48,15 +48,15 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Override
     public List<StudentTitle> findAllTitles() {
-        return studentRepository.selectAllTitles();
+        return studentRepository.selectAllStudentTitles();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public StudentProfile findProfileById(UUID id) {
-        return studentRepository.selectProfileById(id)
+    public StudentProfile findStudentProfileById(UUID id) {
+        return studentRepository.selectStudentProfileById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND));
     }
 }

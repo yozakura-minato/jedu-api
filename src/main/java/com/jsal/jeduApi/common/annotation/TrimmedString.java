@@ -7,7 +7,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * Check if a String record field is null or is trimmed not blank
+ * Check if a String is null or is trimmed not blank
  *
  * @author Yozakura Minato
  */

@@ -21,15 +21,15 @@ public class EmployeeServiceImpl implements EmployeeApiService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public List<EmployeeTitle> findAllTitles() {
-        return employeeRepository.selectAllTitles();
+    public List<EmployeeTitle> findAllEmployeeTitles() {
+        return employeeRepository.selectAllEmployeeTitles();
     }
 
     /**
      * {@inheritDoc}
      */
-    public EmployeeProfile findProfileById(UUID id) {
-        return employeeRepository.selectProfileById(id)
+    public EmployeeProfile findEmployeeProfileById(UUID id) {
+        return employeeRepository.selectEmployeeProfileById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(EmployeeMessage.Id.NOT_FOUND));
     }
 }

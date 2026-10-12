@@ -21,17 +21,4 @@ public record StudentProfile(
         String phoneNumber,
         StudentStatus status
 ) {
-    /**
-     * @return StudentProfile
-     */
-    public static StudentProfile mock() {
-        return new StudentProfile(
-                UUID.randomUUID(),
-                "STD1",
-                "Student 1",
-                "std1@jedu.dev",
-                null,
-                StudentStatus.ACTIVE
-        );
-    }
 }

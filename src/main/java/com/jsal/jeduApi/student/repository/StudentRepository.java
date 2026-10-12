@@ -29,9 +29,9 @@ public class StudentRepository {
      * @param displayId String
      * @param email     Strong
      * @return StudentUniqueValidation
-     * @throws com.jsal.jeduApi.common.exception.SqlExecutionException when SQL result is null
+     * @throws SqlExecutionException when SQL result is null
      */
-    public StudentUniqueValidation existsByDisplayIdOrEmail(String displayId, String email) {
+    public StudentUniqueValidation existsStudentByDisplayIdOrEmail(String displayId, String email) {
         String query = """
                 select
                     exists (
@@ -52,17 +52,18 @@ public class StudentRepository {
         RowMapper<StudentUniqueValidation> mapper = JdbcTemplateMapperFactory.newInstance()
                 .newRowMapper(StudentUniqueValidation.class);
 
-        Optional<StudentUniqueValidation> result = jdbcTemplate.query(query, param, mapper).stream().findFirst();
-        return result.orElseThrow(SqlExecutionException::unexpectedResult);
+        return jdbcTemplate.query(query, param, mapper).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
     /**
      * @param createRequest CreateStudentRequest
      * @param status        StudentStatus
      * @param currentUserId UUID
-     * @throws com.jsal.jeduApi.common.exception.SqlExecutionException when the number of effected rows is not 1
+     * @return UUID: of created student
+     * @throws SqlExecutionException when the number of effected rows is not 1
      */
-    public void insert(CreateStudentRequest createRequest, StudentStatus status, UUID currentUserId) {
+    public UUID insertStudent(CreateStudentRequest createRequest, StudentStatus status, UUID currentUserId) {
         String query = """
                 insert into students (
                     display_id,
@@ -82,26 +83,26 @@ public class StudentRepository {
                     :status,
                     now(),
                     :currentUserId
-                );""";
+                ) returning id;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", createRequest.displayId())
                 .addValue("fullName", createRequest.fullName())
                 .addValue("email", createRequest.email())
                 .addValue("phoneNumber", createRequest.phoneNumber())
                 .addValue("hashedPassword", createRequest.password())
-                .addValue("status", status)
+                .addValue("status", status.getDescription())
                 .addValue("currentUserId", currentUserId);
+        RowMapper<UUID> mapper = JdbcTemplateMapperFactory.newInstance()
+                .addKeys("id").newRowMapper(UUID.class);
 
-        int affectedRowsCount = jdbcTemplate.update(query, param);
-        if (affectedRowsCount != 1) {
-            throw SqlExecutionException.unexpectedEffect();
-        }
+        return jdbcTemplate.query(query, param, mapper).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
     /**
      * @return List of StudentTitle
      */
-    public List<StudentTitle> selectAllTitles() {
+    public List<StudentTitle> selectAllStudentTitles() {
         String query = """
                 select s.id, s.display_id, s.full_name
                 from students s
@@ -116,13 +117,14 @@ public class StudentRepository {
      * @param id UUID
      * @return Optional of StudentProfile
      */
-    public Optional<StudentProfile> selectProfileById(UUID id) {
+    public Optional<StudentProfile> selectStudentProfileById(UUID id) {
         String query = """
                 select s.id, s.display_id, s.full_name, s.email, s.phone_number, s.status
                 from students s
                 where s.id = :id
                 and s.is_deleted is false;""";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
         RowMapper<StudentProfile> mapper = JdbcTemplateMapperFactory.newInstance()
                 .addKeys("id").newRowMapper(StudentProfile.class);
 

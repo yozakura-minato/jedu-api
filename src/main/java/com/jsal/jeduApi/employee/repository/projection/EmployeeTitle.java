@@ -1,6 +1,5 @@
 package com.jsal.jeduApi.employee.repository.projection;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,14 +13,4 @@ public record EmployeeTitle(
         String displayId,
         String fullName
 ) {
-    /**
-     * @return List of EmployeeTitle
-     */
-    public static List<EmployeeTitle> mockList() {
-        return List.of(
-                new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
-                new EmployeeTitle(UUID.randomUUID(), "ID02", "Tester 02"),
-                new EmployeeTitle(UUID.randomUUID(), "ID03", "Tester 03")
-        );
-    }
 }

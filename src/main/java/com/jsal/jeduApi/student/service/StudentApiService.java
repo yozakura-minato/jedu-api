@@ -1,5 +1,6 @@
 package com.jsal.jeduApi.student.service;
 
+import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
@@ -13,12 +14,13 @@ import java.util.UUID;
 public interface StudentApiService {
     /**
      * Validate unique fields {@code displayId} & {@code id}.
-     * If valid then create, else then throw exception.
+     * If valid then return created id, else then throw exception.
      *
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
+     * @return UUID: created student ID
      */
-    void create(CreateStudentRequest request, UUID currentUserId);
+    UUID createStudent(CreateStudentRequest request, UUID currentUserId);
 
     /**
      * @return List of StudentTitle
@@ -31,7 +33,7 @@ public interface StudentApiService {
      *
      * @param id UUID
      * @return StudentProfile
-     * @throws com.jsal.jeduApi.common.exception.ResourceNotFoundException if {@code id} is not found
+     * @throws ResourceNotFoundException if {@code id} is not found
      */
-    StudentProfile findProfileById(UUID id);
+    StudentProfile findStudentProfileById(UUID id);
 }
