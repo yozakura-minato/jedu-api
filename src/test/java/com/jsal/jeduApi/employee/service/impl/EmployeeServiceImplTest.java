@@ -33,15 +33,17 @@ class EmployeeServiceImplTest {
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
+    private static final UUID EMPLOYEE_ID = UUID.randomUUID();
+
     /**
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findAllEmployeeTitles")
+    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeTitles")
     class FindAllEmployeeTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employee title list")
-        void findAllEmployeeTitles_success() {
+        @DisplayName(value = "Scenario 1: SHOULD return employee title list WHEN success")
+        void findAllEmployeeTitles_Success() {
             // Arrange
             var expectedEmployeeTitleList = List.of(
                     new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
@@ -64,12 +66,10 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findEmployeeProfileById")
+    @DisplayName(value = "Test for: EmployeeApiService.findEmployeeProfileById")
     class FindEmployeeProfileByIdTest {
-        private static final UUID EMPLOYEE_ID = UUID.randomUUID();
-
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN id exists")
+        @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN success")
         void findEmployeeProfileById_Success() {
             // Arrange
             var expectedEmployeeProfile = new EmployeeProfile(
@@ -94,7 +94,7 @@ class EmployeeServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN id is not found")
+        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN ID not found")
         void findEmployeeProfileById_IdNotFound() {
             // Arrange
             when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID)).thenReturn(Optional.empty());

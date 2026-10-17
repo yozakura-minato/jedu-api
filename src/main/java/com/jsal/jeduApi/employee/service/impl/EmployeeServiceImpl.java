@@ -28,6 +28,7 @@ public class EmployeeServiceImpl implements EmployeeApiService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public EmployeeProfile findEmployeeProfileById(UUID id) {
         return employeeRepository.selectEmployeeProfileById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(EmployeeMessage.Id.NOT_FOUND));
