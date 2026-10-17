@@ -1,13 +1,11 @@
-package com.jsal.jeduApi.common.util;
+package com.jsal.jeduApi.security.util;
 
 import java.util.UUID;
 
 /**
  * @author Yozakura Minato
  */
-public class CommonConstant {
-    public static final UUID SYSTEM_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-
+public class SecurityConstant {
     /**
      * @deprecated This constant will be removed after MVP
      */
