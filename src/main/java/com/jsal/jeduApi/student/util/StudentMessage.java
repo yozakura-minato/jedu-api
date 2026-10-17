@@ -54,5 +54,6 @@ public class StudentMessage {
     public static class Password {
         public static final String NULL = "student.password.null";
         public static final String NOT_TRIMMED = "student.password.notTrimmed";
+        public static final String WEAK = "student.password.weak";
     }
 }
