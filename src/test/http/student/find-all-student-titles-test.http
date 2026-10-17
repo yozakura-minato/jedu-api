@@ -1,0 +1,13 @@
+### findAllStudentTitle_Success
+GET {{api}}/v1/students/all
+Content-Type: application/json
+
+> {%
+    client.test("SHOULD return student title list", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
