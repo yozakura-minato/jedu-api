@@ -12,17 +12,19 @@ import java.util.UUID;
  */
 public interface EmployeeApiService {
     /**
-     * @return List of EmployeeTitle
+     * @return Employee profile list
      */
     List<EmployeeTitle> findAllEmployeeTitles();
 
     /**
-     * Find by {@code id}.
-     * If exists then return, else then throw exception.
+     * <ol>
+     *     <li>If {@code employeeId} not exist, then throw exception</li>
+     *     <li>Return</li>
+     * </ol>
      *
-     * @param id UUID
-     * @return EmployeeProfile
+     * @param employeeId UUID
+     * @return Employee profile
      * @throws ResourceNotFoundException when {@code employeeId} is not found
      */
-    EmployeeProfile findEmployeeProfileById(UUID id);
+    EmployeeProfile findEmployeeProfileById(UUID employeeId);
 }

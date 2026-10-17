@@ -40,10 +40,10 @@ public class EmployeeRepository {
     }
 
     /**
-     * @param id UUID
+     * @param employeeId UUID
      * @return Optional of EmployeeProfile
      */
-    public Optional<EmployeeProfile> selectEmployeeProfileById(UUID id) {
+    public Optional<EmployeeProfile> selectEmployeeProfileById(UUID employeeId) {
         String sql = """
                 select
                     e.id,
@@ -57,9 +57,9 @@ public class EmployeeRepository {
                     join employee_departments ed on e.id = ed.employee_id
                     join departments d on d.id = ed.department_id
                         and d.is_deleted = false
-                where e.id = :id
+                where e.id = :employeeId
                 and e.is_deleted = false;""";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+        MapSqlParameterSource param = new MapSqlParameterSource().addValue("employeeId", employeeId);
         return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_EXTRACTOR).stream().findFirst();
     }
 }
