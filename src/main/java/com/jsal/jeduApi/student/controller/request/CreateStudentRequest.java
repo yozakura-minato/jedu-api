@@ -1,10 +1,10 @@
 package com.jsal.jeduApi.student.controller.request;
 
+import com.jsal.jeduApi.common.annotation.Email;
 import com.jsal.jeduApi.common.annotation.PhoneNumber;
 import com.jsal.jeduApi.common.annotation.StrongPassword;
 import com.jsal.jeduApi.common.annotation.TrimmedString;
 import com.jsal.jeduApi.student.util.StudentMessage;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 /**
