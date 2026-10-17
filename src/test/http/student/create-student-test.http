@@ -1,14 +1,13 @@
 ### createStudent_Success_HasPhoneNumber
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
-    "displayId": "STD1",
-    "fullName": "Student One",
-    "email": "std1@jedu.com",
-    "phoneNumber": "0909090909",
-    "password": "pw4std1"
+  "displayId": "STD1",
+  "fullName": "Student One",
+  "email": "std1@jedu.com",
+  "phoneNumber": "0909090909",
+  "password": "password4student1"
 }
 
 > {%
@@ -22,16 +21,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Success_NoPhoneNumber
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD2",
     "fullName": "Student Two",
     "email": "std2@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std2"
+    "password": "password4student2"
 }
 
 > {%
@@ -45,16 +43,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_DisplayId_Conflict
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD2",
     "fullName": "Student Three",
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -68,16 +65,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Email_Conflict
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": "Student Three",
     "email": "std2@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -91,16 +87,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_DisplayId_Null
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": null,
     "fullName": "Student Three",
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -114,16 +109,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_DisplayId_NotTrimmed
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": " STD3 ",
     "fullName": "Student Three",
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -137,16 +131,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_FullName_Null
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": null,
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -160,16 +153,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_FullName_NotTrimmed
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": " Student Three ",
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -183,16 +175,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Email_Null
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": "Studen Three",
     "email": null,
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -206,16 +197,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Email_InvalidFormat
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": "Student Three",
     "email": "std3atjedudotcom",
     "phoneNumber": null,
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -229,16 +219,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_PhoneNumber_InvalidFormat
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": "Student Three",
     "email": "std3@jedu.com",
     "phoneNumber": "phone-number",
-    "password": "pw4std3"
+    "password": "password4student3"
 }
 
 > {%
@@ -252,9 +241,8 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Password_Null
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
@@ -275,16 +263,15 @@ Content-Type: {{json}}
 %}
 
 ### createStudent_Password_NotTrimmed
-POST {{host}}/{{api.v1}}
-    /students
-Content-Type: {{json}}
+POST {{api}}/v1/students
+Content-Type: application/json
 
 {
     "displayId": "STD3",
     "fullName": "Student Three",
     "email": "std3@jedu.com",
     "phoneNumber": null,
-    "password": " pw4std3 "
+    "password": " password4student3 "
 }
 
 > {%
@@ -294,5 +281,27 @@ Content-Type: {{json}}
         client.assert(response.body !== null);
         client.assert(response.body.data === null);
         client.assert(response.body.message === "student.password.notTrimmed");
+    });
+%}
+
+### createStudent_Password_Weak
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "weakpassword"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN password not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.password.weak");
     });
 %}

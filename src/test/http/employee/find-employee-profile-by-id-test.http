@@ -2,9 +2,8 @@
 @notFoundId = 00000000-0000-0000-0000-000000000000
 
 ### findProfileByDisplayId_Success
-GET {{host}}/{{api.v1}}
-    /employees/id/{{validId}}
-Content-Type: {{json}}
+GET {{api}}/v1/employees/id/{{validId}}
+Content-Type: application/json
 
 > {%
     client.test("SHOULD return employee profile WHEN id exists", () => {
@@ -17,9 +16,8 @@ Content-Type: {{json}}
 %}
 
 ### findEmployeeProfileByDisplayId_DisplayIdNotFound
-GET {{host}}/{{api.v1}}
-    /employees/id/{{notFoundId}}
-Content-Type: {{json}}
+GET {{api}}/v1/employees/id/{{notFoundId}}
+Content-Type: application/json
 
 > {%
     client.test("SHOULD return error message WHEN id is not found", () => {
