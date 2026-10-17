@@ -4,6 +4,9 @@ package com.jsal.jeduApi.common.exception;
  * @author Yozakura Minato
  */
 public class SqlExecutionException extends RuntimeException {
+    private static final String UNEXPECTED_RESULT_LOCALIZED_MESSAGE = "SQL execution returned unexpected result";
+    private static final String UNEXPECTED_EFFECT_LOCALIZED_MESSAGE = "SQL execution has unexpected effects on rows";
+
     public SqlExecutionException(String localizedMessage) {
         super(localizedMessage, null, false, false);
     }
@@ -14,7 +17,7 @@ public class SqlExecutionException extends RuntimeException {
      * @return SqlExecutionException with localized message
      */
     public static SqlExecutionException unexpectedResult() {
-        return new SqlExecutionException("SQL execution returned unexpected result");
+        return new SqlExecutionException(UNEXPECTED_RESULT_LOCALIZED_MESSAGE);
     }
 
     /**
@@ -23,6 +26,6 @@ public class SqlExecutionException extends RuntimeException {
      * @return SqlExecutionException with localized message
      */
     public static SqlExecutionException unexpectedEffect() {
-        return new SqlExecutionException("SQL execution has unexpected effects on rows");
+        return new SqlExecutionException(UNEXPECTED_EFFECT_LOCALIZED_MESSAGE);
     }
 }

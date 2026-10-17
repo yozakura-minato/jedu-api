@@ -20,6 +20,12 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class EmployeeRepository {
+    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(EmployeeTitle.class);
+    private static final ResultSetExtractor<List<EmployeeProfile>> EMPLOYEE_PROFILE_EXTRACTOR
+            = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
@@ -30,10 +36,7 @@ public class EmployeeRepository {
                 select e.id, e.display_id, e.full_name
                 from employees e
                 where e.is_deleted = false;""";
-        RowMapper<EmployeeTitle> mapper = JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id").newRowMapper(EmployeeTitle.class);
-
-        return jdbcTemplate.query(sql, mapper);
+        return jdbcTemplate.query(sql, EMPLOYEE_TITLE_MAPPER);
     }
 
     /**
@@ -57,9 +60,6 @@ public class EmployeeRepository {
                 where e.id = :id
                 and e.is_deleted = false;""";
         MapSqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        ResultSetExtractor<List<EmployeeProfile>> extractor = JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
-
-        return jdbcTemplate.query(sql, param, extractor).stream().findFirst();
+        return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_EXTRACTOR).stream().findFirst();
     }
 }

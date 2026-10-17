@@ -23,6 +23,15 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class StudentRepository {
+    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
+            = JdbcTemplateMapperFactory.newInstance().newRowMapper(StudentUniqueValidation.class);
+    private static final RowMapper<UUID> UUID_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(UUID.class);
+    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(StudentTitle.class);
+    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(StudentProfile.class);
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
@@ -49,10 +58,7 @@ public class StudentRepository {
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", displayId)
                 .addValue("email", email);
-        RowMapper<StudentUniqueValidation> mapper = JdbcTemplateMapperFactory.newInstance()
-                .newRowMapper(StudentUniqueValidation.class);
-
-        return jdbcTemplate.query(query, param, mapper).stream().findFirst()
+        return jdbcTemplate.query(query, param, STUDENT_UNIQUE_VALIDATION_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -92,10 +98,7 @@ public class StudentRepository {
                 .addValue("hashedPassword", createRequest.password())
                 .addValue("status", status.getDescription())
                 .addValue("currentUserId", currentUserId);
-        RowMapper<UUID> mapper = JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id").newRowMapper(UUID.class);
-
-        return jdbcTemplate.query(query, param, mapper).stream().findFirst()
+        return jdbcTemplate.query(query, param, UUID_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -107,10 +110,7 @@ public class StudentRepository {
                 select s.id, s.display_id, s.full_name
                 from students s
                 where s.is_deleted is false;""";
-        RowMapper<StudentTitle> mapper = JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id").newRowMapper(StudentTitle.class);
-
-        return jdbcTemplate.query(query, mapper);
+        return jdbcTemplate.query(query, STUDENT_TITLE_MAPPER);
     }
 
     /**
@@ -125,9 +125,6 @@ public class StudentRepository {
                 and s.is_deleted is false;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", id);
-        RowMapper<StudentProfile> mapper = JdbcTemplateMapperFactory.newInstance()
-                .addKeys("id").newRowMapper(StudentProfile.class);
-
-        return jdbcTemplate.query(query, param, mapper).stream().findFirst();
+        return jdbcTemplate.query(query, param, STUDENT_PROFILE_MAPPER).stream().findFirst();
     }
 }

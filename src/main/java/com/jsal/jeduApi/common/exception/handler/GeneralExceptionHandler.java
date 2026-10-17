@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GeneralExceptionHandler {
+    private static final String BAD_REQUEST_DEFAULT_MESSAGE = "common.badRequest";
+    private static final String INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE = "common.internalServerError";
+
     /**
      * @param exception MethodArgumentNotValidException
      * @return ResponseEntity with {@code 400 - BAD REQUEST} status and {@code message} ApiResponseBody
@@ -28,7 +31,7 @@ public class GeneralExceptionHandler {
     ) {
         String message = exception.getAllErrors().getFirst().getDefaultMessage();
         log.error("MethodValidationException with message: '{}'", message);
-        String returnMessage = message != null ? message : "common.badRequest";
+        String returnMessage = message != null ? message : BAD_REQUEST_DEFAULT_MESSAGE;
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBody.message(returnMessage));
     }
 
@@ -71,7 +74,7 @@ public class GeneralExceptionHandler {
     public ResponseEntity<ApiResponseBody<?>> handleSqlExecutionException(SqlExecutionException exception) {
         log.error("SqlExecutionException with message: '{}'", exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponseBody.message("common.internalServerError"));
+                .body(ApiResponseBody.message(INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE));
     }
 
     /**
@@ -88,6 +91,6 @@ public class GeneralExceptionHandler {
                     exception.getClass().getSimpleName(), cause.getClass().getSimpleName(), cause.getMessage());
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponseBody.message("common.internalServerError"));
+                .body(ApiResponseBody.message(INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE));
     }
 }
