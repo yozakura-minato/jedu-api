@@ -1,10 +1,13 @@
 package com.jsal.jeduApi.student.service;
 
+import com.jsal.jeduApi.common.exception.ResourceConflictException;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
+import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,27 +16,59 @@ import java.util.UUID;
  */
 public interface StudentApiService {
     /**
-     * Validate unique fields {@code displayId} & {@code id}.
-     * If valid then return created id, else then throw exception.
+     * <ol>
+     *     <li>If {@code request.displayId} or {@code request.email} exists, then throw exception</li>
+     *     <li>Create and return</li>
+     * </ol>
      *
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
-     * @return UUID: created student ID
+     * @return Created student ID
      */
     UUID createStudent(CreateStudentRequest request, UUID currentUserId);
 
     /**
-     * @return List of StudentTitle
+     * @return Student profile list
      */
     List<StudentTitle> findAllTitles();
 
     /**
-     * Find by {@code id}.
-     * If exists then return, else then throw exception.
+     * <ol>
+     *     <li>If {@code studentId} not exist, then throw exception</li>
+     *     <li>Return</li>
+     * </ol>
      *
-     * @param id UUID
-     * @return StudentProfile
+     * @param studentId UUID
+     * @return Student profile
      * @throws ResourceNotFoundException if {@code id} is not found
      */
-    StudentProfile findStudentProfileById(UUID id);
+    StudentProfile findStudentProfileById(UUID studentId);
+
+    /**
+     * <ol>
+     *     <li>If {@code studentId} not exist then throw exception</li>
+     *     <li>If {@code request.displayId} conflicts then throw exception</li>
+     *     <li>Update & return</li>
+     * </ol>
+     *
+     * @param studentId     UUID
+     * @param request       UpdateStudentRequest
+     * @param currentUserId UUID
+     * @return Student updated time
+     * @throws ResourceNotFoundException if {@code id} not exists
+     * @throws ResourceConflictException if {@code displayId} conflict
+     */
+    LocalDateTime updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId);
+
+    /**
+     * <ol>
+     *     <li>If {@code studentId} is not found, then throw exception</li>
+     *     <li>Soft delete and return</li>
+     * </ol>
+     *
+     * @param studentId     UUID
+     * @param currentUserId UUID
+     * @return Student soft deleted time
+     */
+    LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId);
 }

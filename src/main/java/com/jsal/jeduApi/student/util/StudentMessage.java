@@ -8,8 +8,6 @@ public class StudentMessage {
      * @author Yozakura Minato
      */
     public static class Id {
-        public static final String NULL = "student.id.null";
-
         public static final String NOT_FOUND = "student.id.notFound";
     }
 
@@ -55,5 +53,12 @@ public class StudentMessage {
         public static final String NULL = "student.password.null";
         public static final String NOT_TRIMMED = "student.password.notTrimmed";
         public static final String WEAK = "student.password.weak";
+    }
+
+    /**
+     * @author Yozakura Minato
+     */
+    public static class Status {
+        public static final String NULL = "student.status.null";
     }
 }
