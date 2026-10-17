@@ -20,13 +20,13 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class EmployeeRepository {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
     private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
             .addKeys("id").newRowMapper(EmployeeTitle.class);
     private static final ResultSetExtractor<List<EmployeeProfile>> EMPLOYEE_PROFILE_EXTRACTOR
             = JdbcTemplateMapperFactory.newInstance()
             .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
-
-    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
      * @return List of EmployeeTitle
@@ -59,7 +59,8 @@ public class EmployeeRepository {
                         and d.is_deleted = false
                 where e.id = :employeeId
                 and e.is_deleted = false;""";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("employeeId", employeeId);
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("employeeId", employeeId);
         return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_EXTRACTOR).stream().findFirst();
     }
 }

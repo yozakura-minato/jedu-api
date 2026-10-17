@@ -26,14 +26,14 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class StudentRepository {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
     private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
             = JdbcTemplateMapperFactory.newInstance().newRowMapper(StudentUniqueValidation.class);
     private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
             .addKeys("id").newRowMapper(StudentTitle.class);
     private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER = JdbcTemplateMapperFactory.newInstance()
             .addKeys("id").newRowMapper(StudentProfile.class);
-
-    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
      * @param studentDisplayId String
@@ -57,7 +57,8 @@ public class StudentRepository {
                         and s.is_deleted = false
                     ) as exists_by_email;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("studentDisplayId", studentDisplayId).addValue("studentEmail", studentEmail);
+                .addValue("studentDisplayId", studentDisplayId)
+                .addValue("studentEmail", studentEmail);
         return jdbcTemplate.query(sql, param, STUDENT_UNIQUE_VALIDATION_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
@@ -98,7 +99,7 @@ public class StudentRepository {
                 .addValue("hashedPassword", request.password())
                 .addValue("studentStatus", studentStatus.getDescription())
                 .addValue("currentUserId", currentUserId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.uuidMapper()).stream().findFirst()
+        return jdbcTemplate.query(sql, param, PersistenceMapper.UUID_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -123,7 +124,8 @@ public class StudentRepository {
                 from students s
                 where s.id = :studentId
                 and s.is_deleted is false;""";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("studentId", studentId);
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentId", studentId);
         return jdbcTemplate.query(sql, param, STUDENT_PROFILE_MAPPER).stream().findFirst();
     }
 
@@ -140,8 +142,9 @@ public class StudentRepository {
                     where s.id = :studentId
                     and s.is_deleted = false
                 ) as exists_by_id;""";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.booleanMapper()).stream().findFirst()
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -161,8 +164,9 @@ public class StudentRepository {
                     and s.is_deleted = false
                 ) as exists_by_display_id;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("studentDisplayId", studentDisplayId).addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.booleanMapper()).stream().findFirst()
+                .addValue("studentDisplayId", studentDisplayId)
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -192,7 +196,7 @@ public class StudentRepository {
                 .addValue("status", request.status().getDescription())
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.localDateTimeMapper()).stream().findFirst()
+        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -212,8 +216,9 @@ public class StudentRepository {
                 where s.id = :studentId
                 returning s.deleted_at;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("currentUserId", currentUserId).addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.localDateTimeMapper()).stream().findFirst()
+                .addValue("currentUserId", currentUserId)
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 }
