@@ -7,8 +7,8 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * Check a string is null.
- * Then check if it contains 10 number digits and start with 0.
+ * Check if a string is null
+ * or contains 10 number digits and start with 0.
  *
  * @author Yozakura Minato
  */
