@@ -1,11 +1,11 @@
-package com.jsal.jeduApi.common.util;
+package com.jsal.jeduApi.security.util;
 
 import java.util.UUID;
 
 /**
  * @author Yozakura Minato
  */
-public class CommonConstant {
+public class SecurityConstant {
     /**
      * @deprecated This constant will be removed after MVP
      */

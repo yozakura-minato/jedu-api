@@ -1,0 +1,307 @@
+### createStudent_Success_HasPhoneNumber
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+  "displayId": "STD1",
+  "fullName": "Student One",
+  "email": "std1@jedu.com",
+  "phoneNumber": "0909090909",
+  "password": "password4student1"
+}
+
+> {%
+    client.test("SHOULD return created student id WHEN request is valid with phone number", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
+
+### createStudent_Success_NoPhoneNumber
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD2",
+    "fullName": "Student Two",
+    "email": "std2@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student2"
+}
+
+> {%
+    client.test("SHOULD return created student id WHEN request is valid without phone number", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
+
+### createStudent_DisplayId_Conflict
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD2",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN display id conflicts", () => {
+        client.assert(response.status === 409);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.conflict");
+    });
+%}
+
+### createStudent_Email_Conflict
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std2@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN email conflicts", () => {
+        client.assert(response.status === 409);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.email.conflict");
+    });
+%}
+
+### createStudent_DisplayId_Null
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": null,
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN display id is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.null");
+    });
+%}
+
+### createStudent_DisplayId_NotTrimmed
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": " STD3 ",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN display id not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.notTrimmed");
+    });
+%}
+
+### createStudent_FullName_Null
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": null,
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN full name is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.fullName.null");
+    });
+%}
+
+### createStudent_FullName_NotTrimmed
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": " Student Three ",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN full name not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.fullName.notTrimmed");
+    });
+%}
+
+### createStudent_Email_Null
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Studen Three",
+    "email": null,
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN email is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.email.null");
+    });
+%}
+
+### createStudent_Email_InvalidFormat
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3atjedudotcom",
+    "phoneNumber": null,
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN email has invalid format", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.email.invalidFormat");
+    });
+%}
+
+### createStudent_PhoneNumber_InvalidFormat
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": "phone-number",
+    "password": "password4student3"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN phone number has invalid format", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.phoneNumber.invalidFormat");
+    });
+%}
+
+### createStudent_Password_Null
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": null
+}
+
+> {%
+    client.test("SHOULD return error message WHEN password is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.password.null");
+    });
+%}
+
+### createStudent_Password_NotTrimmed
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": " password4student3 "
+}
+
+> {%
+    client.test("SHOULD return error message WHEN password not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.password.notTrimmed");
+    });
+%}
+
+### createStudent_Password_Weak
+POST {{api}}/v1/students
+Content-Type: application/json
+
+{
+    "displayId": "STD3",
+    "fullName": "Student Three",
+    "email": "std3@jedu.com",
+    "phoneNumber": null,
+    "password": "weakpassword"
+}
+
+> {%
+    client.test("SHOULD return error message WHEN password not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.password.weak");
+    });
+%}

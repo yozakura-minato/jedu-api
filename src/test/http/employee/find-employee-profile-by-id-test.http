@@ -2,32 +2,28 @@
 @notFoundId = 00000000-0000-0000-0000-000000000000
 
 ### findProfileByDisplayId_Success
-GET {{host}}/{{api.v1}}
-    /employees/id/{{validId}}
-Content-Type: {{json}}
+GET {{api}}/v1/employees/id/{{validId}}
+Content-Type: application/json
 
 > {%
-    client.test("SHOULD return studentProfile WHEN displayId is valid", () => {
+    client.test("SHOULD return employee profile WHEN id exists", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
-        client.assert(response.body.status === "SUCCESS");
         client.assert(response.body.data !== null);
         client.assert(response.body.message === null);
     });
 %}
 
-### findProfileByDisplayId_DisplayIdNotFound
-GET {{host}}/{{api.v1}}
-    /employees/id/{{notFoundId}}
-Content-Type: {{json}}
+### findEmployeeProfileByDisplayId_DisplayIdNotFound
+GET {{api}}/v1/employees/id/{{notFoundId}}
+Content-Type: application/json
 
 > {%
-    client.test("SHOULD return message WHEN displayId is not found", () => {
+    client.test("SHOULD return error message WHEN id is not found", () => {
         client.assert(response.status === 404);
 
         client.assert(response.body !== null);
-        client.assert(response.body.status === "FAIL");
         client.assert(response.body.data === null);
         client.assert(response.body.message === "employee.id.notFound");
     });

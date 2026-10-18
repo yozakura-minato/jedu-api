@@ -1,15 +1,21 @@
 package com.jsal.jeduApi.student.repository;
 
+import com.jsal.jeduApi.common.exception.SqlExecutionException;
+import com.jsal.jeduApi.persistence.util.PersistenceMapper;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.repository.mapper.StudentParamsMapper;
+import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
+import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.DataClassRowMapper;
+import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,19 +27,51 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StudentRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final StudentParamsMapper studentParamsMapper;
 
-    private static final DataClassRowMapper<StudentProfile> studentProfileRowMapper
-            = DataClassRowMapper.newInstance(StudentProfile.class);
-    private static final DataClassRowMapper<StudentUniqueValidation> studentUniqueValidationMapper
-            = DataClassRowMapper.newInstance(StudentUniqueValidation.class);
+    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
+            = JdbcTemplateMapperFactory.newInstance().newRowMapper(StudentUniqueValidation.class);
+    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(StudentTitle.class);
+    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER = JdbcTemplateMapperFactory.newInstance()
+            .addKeys("id").newRowMapper(StudentProfile.class);
 
     /**
-     * @param insertParams Map of String keys and any values
-     * @return true if affectedRows == 1, or else false
+     * @param studentDisplayId String
+     * @param studentEmail     Strong
+     * @return StudentUniqueValidation
+     * @throws SqlExecutionException when SQL execution returns nothing
      */
-    public boolean insert(CreateStudentRequest createRequest, UUID currentUserId) {
-        String insertSql = """
+    public StudentUniqueValidation existsStudentByDisplayIdOrEmail(String studentDisplayId, String studentEmail) {
+        String sql = """
+                select
+                    exists (
+                        select 1
+                        from students s
+                        where s.display_id = :studentDisplayId
+                        and s.is_deleted = false
+                    ) as exists_by_display_id,
+                    exists (
+                        select 1
+                        from students s
+                        where s.email = :studentEmail
+                        and s.is_deleted = false
+                    ) as exists_by_email;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentDisplayId", studentDisplayId)
+                .addValue("studentEmail", studentEmail);
+        return jdbcTemplate.query(sql, param, STUDENT_UNIQUE_VALIDATION_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
+    }
+
+    /**
+     * @param request       CreateStudentRequest
+     * @param studentStatus StudentStatus
+     * @param currentUserId UUID
+     * @return UUID: of created student
+     * @throws SqlExecutionException when SQL execution returns nothing
+     */
+    public UUID insertStudent(CreateStudentRequest request, StudentStatus studentStatus, UUID currentUserId) {
+        String sql = """
                 insert into students (
                     display_id,
                     full_name,
@@ -49,67 +87,138 @@ public class StudentRepository {
                     :email,
                     :phoneNumber,
                     :hashedPassword,
-                    :status,
+                    :studentStatus,
                     now(),
-                    :createdBy
-                );""";
-        MapSqlParameterSource insertParams = studentParamsMapper.createRequestToInsertParams(
-                createRequest, currentUserId
-        );
-
-        int affectedRows = jdbcTemplate.update(insertSql, insertParams);
-        return affectedRows == 1;
+                    :currentUserId
+                ) returning id;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("displayId", request.displayId())
+                .addValue("fullName", request.fullName())
+                .addValue("email", request.email())
+                .addValue("phoneNumber", request.phoneNumber())
+                .addValue("hashedPassword", request.password())
+                .addValue("studentStatus", studentStatus.getDescription())
+                .addValue("currentUserId", currentUserId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.UUID_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
     /**
-     * @param displayId String
-     * @param email     Strong
-     * @return Optional of StudentUniqueValidation
+     * @return List of StudentTitle
      */
-    public Optional<StudentUniqueValidation> existsByDisplayIdOrEmail(String displayId, String email) {
-        String selectSql = """
-                select
-                    exists (
-                        select 1
-                        from students s
-                        where s.display_id = :displayId
-                        and s.is_deleted = false
-                    ) as exists_by_display_id,
-                    exists (
-                        select 1
-                        from students s
-                        where s.email = :email
-                        and s.is_deleted = false
-                    ) as exists_by_email;""";
-        MapSqlParameterSource selectParms = studentParamsMapper.displayIdAndEmailToSelectParams(displayId, email);
-
-        return jdbcTemplate.query(selectSql, selectParms, studentUniqueValidationMapper).stream().findFirst();
-    }
-
-    /**
-     * @return List of StudentProfile
-     */
-    public List<StudentProfile> selectAllProfiles() {
-        String selectSql = """
-                select s.display_id, s.full_name, s.email, s.phone_number, s.status
+    public List<StudentTitle> selectAllStudentTitles() {
+        String sql = """
+                select s.id, s.display_id, s.full_name
                 from students s
                 where s.is_deleted is false;""";
-
-        return jdbcTemplate.query(selectSql, studentProfileRowMapper);
+        return jdbcTemplate.query(sql, STUDENT_TITLE_MAPPER);
     }
 
     /**
-     * @param displayId String
+     * @param studentId UUID
      * @return Optional of StudentProfile
      */
-    public Optional<StudentProfile> selectProfileByDisplayId(String displayId) {
-        String selectSql = """
-                select s.display_id, s.full_name, s.email, s.phone_number, s.status
+    public Optional<StudentProfile> selectStudentProfileById(UUID studentId) {
+        String sql = """
+                select s.id, s.display_id, s.full_name, s.email, s.phone_number, s.status
                 from students s
-                where s.display_id = :displayId
+                where s.id = :studentId
                 and s.is_deleted is false;""";
-        MapSqlParameterSource selectParam = studentParamsMapper.displayIdToSelectParam(displayId);
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, STUDENT_PROFILE_MAPPER).stream().findFirst();
+    }
 
-        return jdbcTemplate.query(selectSql, selectParam, studentProfileRowMapper).stream().findFirst();
+    /**
+     * @param studentId UUID
+     * @return boolean
+     * @throws SqlExecutionException when SQL execution returns nothing
+     */
+    public boolean existsStudentById(UUID studentId) {
+        String sql = """
+                select exists (
+                    select 1
+                    from students s
+                    where s.id = :studentId
+                    and s.is_deleted = false
+                ) as exists_by_id;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
+    }
+
+    /**
+     * @param studentDisplayId String
+     * @param studentId        UUID
+     * @return boolean
+     * @throws SqlExecutionException when SQL execution is nothing
+     */
+    public boolean existsStudentByDisplayAndIdIsNot(String studentDisplayId, UUID studentId) {
+        String sql = """
+                select exists (
+                    select 1
+                    from students s
+                    where s.display_id = :studentDisplayId
+                    and s.id != :studentId
+                    and s.is_deleted = false
+                ) as exists_by_display_id;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("studentDisplayId", studentDisplayId)
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
+    }
+
+    /**
+     * @param request       CreateStudentRequest
+     * @param currentUserId UUID
+     * @return LocalDateTime: student updated time
+     * @throws SqlExecutionException when SQL execution returns nothing
+     */
+    public LocalDateTime updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId) {
+        String sql = """
+                update students s
+                set
+                    display_id = :displayId,
+                    full_name = :fullName,
+                    phone_number = :phoneNumber,
+                    status = :status,
+                    updated_at = now(),
+                    updated_by = :currentUserId
+                where s.id = :studentId
+                and s.is_deleted = false
+                returning s.updated_at;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("displayId", request.displayId())
+                .addValue("fullName", request.fullName())
+                .addValue("phoneNumber", request.phoneNumber())
+                .addValue("status", request.status().getDescription())
+                .addValue("currentUserId", currentUserId)
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
+    }
+
+    /**
+     * @param studentId     UUID
+     * @param currentUserId UUID
+     * @return Student soft deleted time
+     * @throws SqlExecutionException when SQL execution returns nothing
+     */
+    public LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId) {
+        String sql = """
+                update students s
+                set
+                    is_deleted = true,
+                    deleted_at = now(),
+                    deleted_by = :currentUserId
+                where s.id = :studentId
+                returning s.deleted_at;""";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("currentUserId", currentUserId)
+                .addValue("studentId", studentId);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
+                .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 }

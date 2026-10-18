@@ -14,6 +14,8 @@ import java.util.List;
  */
 @Configuration
 class CorsConfig {
+    private static final Long CORS_MAX_AGE = 3_600L;
+
     @Value(value = "${jedu.api.security.allowed-methods}")
     private List<String> apiAllowedMethods;
 
@@ -33,7 +35,7 @@ class CorsConfig {
         config.setAllowedMethods(apiAllowedMethods);
         config.setAllowedHeaders(apiAllowedHeaders);
         config.setAllowCredentials(true);
-        config.setMaxAge(3_600L);
+        config.setMaxAge(CORS_MAX_AGE);
 
         UrlBasedCorsConfigurationSource urlConfigSource = new UrlBasedCorsConfigurationSource();
         urlConfigSource.registerCorsConfiguration(apiCorsPattern, config);

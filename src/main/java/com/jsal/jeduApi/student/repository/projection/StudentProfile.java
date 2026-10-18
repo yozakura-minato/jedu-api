@@ -2,7 +2,10 @@ package com.jsal.jeduApi.student.repository.projection;
 
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 
+import java.util.UUID;
+
 /**
+ * @param id          UUDI
  * @param displayId   String
  * @param fullName    String
  * @param email       String
@@ -11,6 +14,7 @@ import com.jsal.jeduApi.student.repository.type.StudentStatus;
  * @author Yozakura Minato
  */
 public record StudentProfile(
+        UUID id,
         String displayId,
         String fullName,
         String email,

@@ -24,19 +24,4 @@ public record EmployeeProfile(
         EmployeeStatus status,
         List<String> departments
 ) {
-    /**
-     * @param id UUID
-     * @return EmployeeProfile
-     */
-    public static EmployeeProfile mockWithId(UUID id) {
-        return new EmployeeProfile(
-                id,
-                "id4tester",
-                "JEDU Tester",
-                "tester@jedu.dev",
-                null,
-                EmployeeStatus.ACTIVE,
-                List.of("Department 1", "Department 2", "Department 3")
-        );
-    }
 }

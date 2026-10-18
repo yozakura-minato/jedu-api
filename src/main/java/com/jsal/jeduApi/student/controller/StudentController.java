@@ -1,22 +1,20 @@
 package com.jsal.jeduApi.student.controller;
 
-import com.jsal.jeduApi.common.annotation.TrimmedString;
-import com.jsal.jeduApi.common.response.ApiResponse;
-import com.jsal.jeduApi.common.util.CommonConstant;
+import com.jsal.jeduApi.common.response.ApiResponseBody;
+import com.jsal.jeduApi.security.util.SecurityConstant;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
+import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.service.StudentApiService;
-import com.jsal.jeduApi.student.util.StudentMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,41 +28,55 @@ public class StudentController {
     private final StudentApiService studentApiService;
 
     @PostMapping(path = "/api/v1/students")
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create student", description = """
-            * Request body: createRequest - CreateStudentRequest
-            * Return data: StudentDisplayIdResponse
-            * Return error: when displayId or email is conflicts""")
-    public ResponseEntity<ApiResponse<StudentDisplayIdResponse>> create(
-            @RequestBody
-            @Valid
-            CreateStudentRequest createRequest
-    ) {
-        UUID currentUserId = CommonConstant.CURRENT_EMPLOYEE_ID;
-        StudentDisplayIdResponse displayId = studentApiService.create(createRequest, currentUserId);
-        return ResponseEntity.ok(ApiResponse.success(displayId));
+            - Return: Created student ID
+            - Validation:
+                - Student display ID must not conflict
+                - Student's email must not conflict""")
+    public ResponseEntity<ApiResponseBody<UUID>> createStudent(@RequestBody @Valid CreateStudentRequest request) {
+        UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;
+        UUID createdStudentId = studentApiService.createStudent(request, currentUserId);
+        return ResponseEntity.ok(ApiResponseBody.data(createdStudentId));
     }
 
     @GetMapping(path = "/api/v1/students/all")
-    @Operation(summary = "Find all StudentProfiles", description = """
-            * Return data: List of StudentProfile""")
-    public ResponseEntity<ApiResponse<List<StudentProfile>>> findAllProfiles() {
-        List<StudentProfile> profileList = studentApiService.findAllProfiles();
-        return ResponseEntity.ok(ApiResponse.success(profileList));
+    @Operation(summary = "Find all student titles", description = """
+            - Return: Student title list""")
+    public ResponseEntity<ApiResponseBody<List<StudentTitle>>> findAllStudentProfiles() {
+        List<StudentTitle> studentTitleList = studentApiService.findAllTitles();
+        return ResponseEntity.ok(ApiResponseBody.data(studentTitleList));
     }
 
-    @GetMapping(path = "/api/v1/students/display-id/{displayId}")
-    @Operation(summary = "Find StudentProfile by displayId", description = """
-            * Path variable: displayId - String
-            * Return data: StudentProfile
-            * Return error: when displayId is not found""")
-    public ResponseEntity<ApiResponse<StudentProfile>> findProfileByDisplayId(
-            @PathVariable
-            @NotNull(message = StudentMessage.DisplayId.NULL)
-            @TrimmedString(message = StudentMessage.DisplayId.NOT_TRIMMED)
-            String displayId
+    @GetMapping(path = "/api/v1/students/id/{studentId}")
+    @Operation(summary = "Find student profiles by ID", description = """
+            - Return: Student profile
+            - Validation: Student ID must exist""")
+    public ResponseEntity<ApiResponseBody<StudentProfile>> findStudentProfileByDisplayId(@PathVariable UUID studentId) {
+        StudentProfile studentProfile = studentApiService.findStudentProfileById(studentId);
+        return ResponseEntity.ok(ApiResponseBody.data(studentProfile));
+    }
+
+    @PutMapping(path = "/api/v1/students/id/{studentId}")
+    @Operation(summary = "Update student", description = """
+            - Return: Student updated time
+            - Validation:
+                - Student ID must exist
+                - Student display ID must not conflict""")
+    public ResponseEntity<ApiResponseBody<LocalDateTime>> update(
+            @PathVariable UUID studentId, @RequestBody @Valid UpdateStudentRequest request
     ) {
-        StudentProfile profile = studentApiService.findProfileByDisplayId(displayId);
-        return ResponseEntity.ok(ApiResponse.success(profile));
+        UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;
+        LocalDateTime studentUpdatedTime = studentApiService.updateStudent(studentId, request, currentUserId);
+        return ResponseEntity.ok(ApiResponseBody.data(studentUpdatedTime));
+    }
+
+    @DeleteMapping(path = "/api/v1/students/id/{studentId}")
+    @Operation(summary = "Soft delete student", description = """
+            - Return: Student soft deleted time
+            - Validation: Student ID must exists""")
+    public ResponseEntity<ApiResponseBody<LocalDateTime>> delete(@PathVariable UUID studentId) {
+        UUID currentUserID = SecurityConstant.CURRENT_EMPLOYEE_ID;
+        LocalDateTime studentSoftDeletedTime = studentApiService.softDeleteStudent(studentId, currentUserID);
+        return ResponseEntity.ok(ApiResponseBody.data(studentSoftDeletedTime));
     }
 }

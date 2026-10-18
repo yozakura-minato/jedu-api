@@ -4,6 +4,7 @@ import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.EmployeeRepository;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
+import com.jsal.jeduApi.employee.repository.type.EmployeeStatus;
 import com.jsal.jeduApi.employee.util.EmployeeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,29 +31,34 @@ class EmployeeServiceImplTest {
     private EmployeeRepository employeeRepository;
 
     @InjectMocks
-    private EmployeeServiceImpl employeeApiService;
+    private EmployeeServiceImpl employeeService;
+
+    private static final UUID EMPLOYEE_ID = UUID.randomUUID();
 
     /**
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findAllTitles")
-    class FindAllTitlesTest {
+    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeTitles")
+    class FindAllEmployeeTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return title list WHEN called")
-        void findAllTitles_success() {
+        @DisplayName(value = "Scenario 1: SHOULD return employee title list WHEN success")
+        void findAllEmployeeTitles_Success() {
             // Arrange
-            var expectedTitleList = EmployeeTitle.mockList();
-
-            when(employeeRepository.selectAllTitles()).thenReturn(expectedTitleList);
+            var expectedEmployeeTitleList = List.of(
+                    new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
+                    new EmployeeTitle(UUID.randomUUID(), "ID02", "Tester 02"),
+                    new EmployeeTitle(UUID.randomUUID(), "ID03", "Tester 03")
+            );
+            when(employeeRepository.selectAllEmployeeTitles()).thenReturn(expectedEmployeeTitleList);
 
             // Act
-            var actualTitleList = employeeApiService.findAllTitles();
+            var actualEmployeeTitleList = employeeService.findAllEmployeeTitles();
 
             // Assert
-            verify(employeeRepository, times(1)).selectAllTitles();
+            assertEquals(expectedEmployeeTitleList, actualEmployeeTitleList);
 
-            assertEquals(expectedTitleList, actualTitleList);
+            verify(employeeRepository, times(1)).selectAllEmployeeTitles();
         }
     }
 
@@ -59,41 +66,47 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: findProfileById")
-    class FindProfileByIdTest {
-        public static final UUID ID = UUID.randomUUID();
-
+    @DisplayName(value = "Test for: EmployeeApiService.findEmployeeProfileById")
+    class FindEmployeeProfileByIdTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employeeProfile WHEN displayId is valid")
-        void findProfileById_Success() {
+        @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN success")
+        void findEmployeeProfileById_Success() {
             // Arrange
-            var expectedProfile = EmployeeProfile.mockWithId(ID);
-            when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.of(expectedProfile));
+            var expectedEmployeeProfile = new EmployeeProfile(
+                    EMPLOYEE_ID,
+                    "id4tester",
+                    "JEDU Tester",
+                    "tester@jedu.dev",
+                    null,
+                    EmployeeStatus.ACTIVE,
+                    List.of("Department 1", "Department 2", "Department 3")
+            );
+            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID))
+                    .thenReturn(Optional.of(expectedEmployeeProfile));
 
             // Act
-            var actualProfile = employeeApiService.findProfileById(ID);
+            var actualEmployeeProfile = employeeService.findEmployeeProfileById(EMPLOYEE_ID);
 
             // Assert
-            verify(employeeRepository, times(1)).selectProfileById(ID);
+            assertEquals(expectedEmployeeProfile, actualEmployeeProfile);
 
-            assertEquals(expectedProfile, actualProfile);
+            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN displayId is not found")
-        void findProfileById_DisplayIdNotFound() {
+        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN ID not found")
+        void findEmployeeProfileById_IdNotFound() {
             // Arrange
-            when(employeeRepository.selectProfileById(ID)).thenReturn(Optional.empty());
+            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
             // Act
-            var exception = assertThrows(
-                    ResourceNotFoundException.class, () -> employeeApiService.findProfileById(ID)
-            );
+            var exception = assertThrows(ResourceNotFoundException.class,
+                    () -> employeeService.findEmployeeProfileById(EMPLOYEE_ID));
 
             // Assert
-            verify(employeeRepository, times(1)).selectProfileById(ID);
-
             assertEquals(EmployeeMessage.Id.NOT_FOUND, exception.getMessage());
+
+            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
         }
     }
 }
