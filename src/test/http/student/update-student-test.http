@@ -1,0 +1,212 @@
+@existsStudentId = 01a14d57-314e-75db-8702-6e079df98625
+@notFoundStudentId = 00000000-0000-0000-0000-000000000000
+
+### updateStudentTest_Success_WithPhoneNumber
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD1E",
+  "fullName": "Edited Student One",
+  "phoneNumber": "0101010101",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 1: SHOULD return student updated time WHEN success with student phone number", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
+
+#### updateStudentTest_Success_WithoutPhoneNumber
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD1EE",
+  "fullName": "Edited Edited Student One",
+  "phoneNumber": null,
+  "status": "CREATED"
+}
+
+> {%
+    client.test("Scenario 2: SHOULD return student updated time WHEN success without student phone number", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
+
+### updateStudent_Id_NotFound
+PUT {{api}}/v1/students/id/{{notFoundStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD1EEE",
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 3: SHOULD return error message WHEN student ID not found", () => {
+        client.assert(response.status === 404);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.id.notFound");
+    });
+%}
+
+### updateStudent_DisplayId_Conflict
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD2",
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 4: SHOULD return error message WHEN student display ID conflicts", () => {
+        client.assert(response.status === 409);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.conflict");
+    });
+%}
+
+### updateStudent_DisplayId_Null
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": null,
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 5: SHOULD return error message WHEN student display ID is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.null");
+    });
+%}
+
+### updateStudent_DisplayId_NotTrimmed
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": " STD3 ",
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 6: SHOULD return error message WHEN student display ID is not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.displayId.notTrimmed");
+    });
+%}
+
+### updateStudent_FullName_Null
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD3",
+  "fullName": null,
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 7: SHOULD return error message WHEN student full name is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.fullName.null");
+    });
+%}
+
+### updateStudent_FullName_NotTrimmed
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD3",
+  "fullName": " Edited Edited Edited Student One ",
+  "phoneNumber": "0102030405",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 8: SHOULD return error message WHEN student full name is not trimmed", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.fullName.notTrimmed");
+    });
+%}
+
+### updateStudent_PhoneNumber_InvalidFormat
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD3",
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "123456789",
+  "status": "ACTIVE"
+}
+
+> {%
+    client.test("Scenario 9: SHOULD return error message WHEN student phone number has invalid format", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.phoneNumber.invalidFormat");
+    });
+%}
+
+### updateStudent_Status_Null
+PUT {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+{
+  "displayId": "STD3",
+  "fullName": "Edited Edited Edited Student One",
+  "phoneNumber": "0102030405",
+  "status": null
+}
+
+> {%
+    client.test("Scenario 10: SHOULD return error message WHEN student status is null", () => {
+        client.assert(response.status === 400);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.status.null");
+    });
+%}
