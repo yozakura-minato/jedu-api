@@ -203,10 +203,9 @@ public class StudentRepository {
     /**
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Student soft deleted time
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @return Optional of student soft deleted time
      */
-    public LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public Optional<LocalDateTime> softDeleteStudent(UUID studentId, UUID currentUserId) {
         String sql = """
                 update students s
                 set
@@ -214,11 +213,11 @@ public class StudentRepository {
                     deleted_at = now(),
                     deleted_by = :currentUserId
                 where s.id = :studentId
+                and s.is_deleted = false
                 returning s.deleted_at;""";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
-                .orElseThrow(SqlExecutionException::unexpectedResult);
+        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst();
     }
 }

@@ -86,11 +86,7 @@ public class StudentServiceImpl implements StudentApiService {
     @Transactional
     @Override
     public LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId) {
-        boolean isStudentExists = studentRepository.existsStudentById(studentId);
-        if (!isStudentExists) {
-            throw new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND);
-        }
-
-        return studentRepository.softDeleteStudent(studentId, currentUserId);
+        return studentRepository.softDeleteStudent(studentId, currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND));
     }
 }
