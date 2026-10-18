@@ -6,7 +6,7 @@ GET {{api}}/v1/students/id/{{existsId}}
 Content-Type: application/json
 
 > {%
-    client.test("SHOULD return  WHEN  is valid", () => {
+    client.test("Scenario 1: SHOULD return student profile WHEN success", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -20,7 +20,7 @@ GET {{api}}/v1/students/id/{{notFoundId}}
 Content-Type: application/json
 
 > {%
-    client.test("SHOULD return  WHEN  is valid", () => {
+    client.test("Scenario 2: SHOULD return error message WHEN student ID not found", () => {
         client.assert(response.status === 404);
 
         client.assert(response.body !== null);
