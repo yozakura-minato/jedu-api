@@ -284,11 +284,9 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return student soft deleted time WHEN success")
         void softDeleteStudent_Success() {
             // Arrange
-            when(studentRepository.existsStudentById(STUDENT_ID)).thenReturn(true);
-
             var expectedStudentSoftDeletedTime = LocalDateTime.now();
             when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID))
-                    .thenReturn(expectedStudentSoftDeletedTime);
+                    .thenReturn(Optional.of(expectedStudentSoftDeletedTime));
 
             // Act
             var actualStudentSoftDeletedTime = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
@@ -296,7 +294,6 @@ class StudentServiceImplTest {
             // Assert
             assertEquals(expectedStudentSoftDeletedTime, actualStudentSoftDeletedTime);
 
-            verify(studentRepository, times(1)).existsStudentById(STUDENT_ID);
             verify(studentRepository, timeout(1)).softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
         }
 
@@ -304,7 +301,7 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN student ID not found")
         void softDeleteStudent_IdNotFound() {
             // Arrange
-            when(studentRepository.existsStudentById(STUDENT_ID)).thenReturn(false);
+            when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID)).thenReturn(Optional.empty());
 
             // Act
             var exception = assertThrows(ResourceNotFoundException.class,
@@ -313,8 +310,7 @@ class StudentServiceImplTest {
             // Assert
             assertEquals(StudentMessage.Id.NOT_FOUND, exception.getMessage());
 
-            verify(studentRepository, timeout(1)).existsStudentById(STUDENT_ID);
-            verify(studentRepository, never()).softDeleteStudent(any(), any());
+            verify(studentRepository, times(1)).softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
         }
     }
 }
