@@ -26,7 +26,8 @@ public class EmployeeController {
 
     @GetMapping(path = "/api/v1/employees/all")
     @Operation(summary = "Find all employee titles", description = """
-            - Return: Employee title list""")
+            - Return: Employee title list
+            """)
     public ResponseEntity<ApiResponseBody<List<EmployeeTitle>>> findAllEmployeeTitles() {
         List<EmployeeTitle> employeeTitleList = employeeApiService.findAllEmployeeTitles();
         return ResponseEntity.ok(ApiResponseBody.data(employeeTitleList));
@@ -35,7 +36,8 @@ public class EmployeeController {
     @GetMapping(path = "/api/v1/employees/id/{employeeId}")
     @Operation(summary = "Find employee profile by ID", description = """
             - Return: Employee profile
-            - Validation: Employee ID must exists""")
+            - Validation: Employee ID must exists
+            """)
     public ResponseEntity<ApiResponseBody<EmployeeProfile>> findEmployeeProfileById(@PathVariable UUID employeeId) {
         EmployeeProfile employeeProfile = employeeApiService.findEmployeeProfileById(employeeId);
         return ResponseEntity.ok(ApiResponseBody.data(employeeProfile));

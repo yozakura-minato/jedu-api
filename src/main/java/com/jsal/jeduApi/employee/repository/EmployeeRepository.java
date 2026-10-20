@@ -2,8 +2,8 @@ package com.jsal.jeduApi.employee.repository;
 
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
+import com.jsal.jeduApi.persistence.mapper.BaseMapperFactory;
 import lombok.RequiredArgsConstructor;
-import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,11 +22,10 @@ import java.util.UUID;
 public class EmployeeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
-            .addKeys("id").newRowMapper(EmployeeTitle.class);
+    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_MAPPER
+            = BaseMapperFactory.rowMapper(EmployeeTitle.class);
     private static final ResultSetExtractor<List<EmployeeProfile>> EMPLOYEE_PROFILE_EXTRACTOR
-            = JdbcTemplateMapperFactory.newInstance()
-            .addKeys("id").newResultSetExtractor(EmployeeProfile.class);
+            = BaseMapperFactory.resultSetExtractor(EmployeeProfile.class, "id");
 
     /**
      * @return List of EmployeeTitle
@@ -35,7 +34,8 @@ public class EmployeeRepository {
         String sql = """
                 select e.id, e.display_id, e.full_name
                 from employees e
-                where e.is_deleted = false;""";
+                where e.is_deleted = false;
+                """;
         return jdbcTemplate.query(sql, EMPLOYEE_TITLE_MAPPER);
     }
 
@@ -58,7 +58,8 @@ public class EmployeeRepository {
                     join departments d on d.id = ed.department_id
                         and d.is_deleted = false
                 where e.id = :employeeId
-                and e.is_deleted = false;""";
+                and e.is_deleted = false;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("employeeId", employeeId);
         return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_EXTRACTOR).stream().findFirst();

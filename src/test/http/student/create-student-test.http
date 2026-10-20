@@ -1,4 +1,4 @@
-### createStudent_Success_HasPhoneNumber
+### createStudent_Success_WithPhoneNumber
 POST {{api}}/v1/students
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 > {%
-    client.test("SHOULD return created student id WHEN request is valid with phone number", () => {
+    client.test("Scenario 1: SHOULD return created student ID WHEN success with student phone number", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -20,20 +20,20 @@ Content-Type: application/json
     });
 %}
 
-### createStudent_Success_NoPhoneNumber
+### createStudent_Success_WithoutPhoneNumber
 POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD2",
-    "fullName": "Student Two",
-    "email": "std2@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student2"
+  "displayId": "STD2",
+  "fullName": "Student Two",
+  "email": "std2@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student2"
 }
 
 > {%
-    client.test("SHOULD return created student id WHEN request is valid without phone number", () => {
+    client.test("Scenario 2: SHOULD return created student id WHEN success without student phone number", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -47,15 +47,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD2",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD2",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN display id conflicts", () => {
+    client.test("Scenario 3: SHOULD return error message WHEN student display ID conflicts", () => {
         client.assert(response.status === 409);
 
         client.assert(response.body !== null);
@@ -69,15 +69,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std2@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std2@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN email conflicts", () => {
+    client.test("Scenario 4: SHOULD return error message WHEN student email conflicts", () => {
         client.assert(response.status === 409);
 
         client.assert(response.body !== null);
@@ -91,15 +91,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": null,
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": null,
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN display id is null", () => {
+    client.test("Scenario 5: SHOULD return error message WHEN student display ID is null", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -113,15 +113,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": " STD3 ",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": " STD3 ",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN display id not trimmed", () => {
+    client.test("Scenario 6: SHOULD return error message WHEN student display ID is not trimmed", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -135,15 +135,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": null,
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": null,
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN full name is null", () => {
+    client.test("Scenario 7: SHOULD return error message WHEN student full name is null", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -157,15 +157,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": " Student Three ",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": " Student Three ",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN full name not trimmed", () => {
+    client.test("Scenario 8: SHOULD return error message WHEN student full name is not trimmed", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -179,15 +179,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Studen Three",
-    "email": null,
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": "Studen Three",
+  "email": null,
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN email is null", () => {
+    client.test("Scenario 9: SHOULD return error message WHEN student email is null", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -201,15 +201,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std3atjedudotcom",
-    "phoneNumber": null,
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std3atjedudotcom",
+  "phoneNumber": null,
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN email has invalid format", () => {
+    client.test("Scenario 10: SHOULD return error message WHEN student email has invalid format", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -223,15 +223,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": "phone-number",
-    "password": "password4student3"
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": "phone-number",
+  "password": "password4student3"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN phone number has invalid format", () => {
+    client.test("Scenario 11: SHOULD return error message WHEN student phone number has invalid format", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -245,15 +245,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": null
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": null
 }
 
 > {%
-    client.test("SHOULD return error message WHEN password is null", () => {
+    client.test("Scenario 12: SHOULD return error message WHEN student password is null", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -267,15 +267,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": " password4student3 "
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": " password4student3 "
 }
 
 > {%
-    client.test("SHOULD return error message WHEN password not trimmed", () => {
+    client.test("Scenario 13: SHOULD return error message WHEN student password not trimmed", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);
@@ -289,15 +289,15 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-    "displayId": "STD3",
-    "fullName": "Student Three",
-    "email": "std3@jedu.com",
-    "phoneNumber": null,
-    "password": "weakpassword"
+  "displayId": "STD3",
+  "fullName": "Student Three",
+  "email": "std3@jedu.com",
+  "phoneNumber": null,
+  "password": "weakpassword"
 }
 
 > {%
-    client.test("SHOULD return error message WHEN password not trimmed", () => {
+    client.test("Scenario 14: SHOULD return error message WHEN student password is weak", () => {
         client.assert(response.status === 400);
 
         client.assert(response.body !== null);

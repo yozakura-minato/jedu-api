@@ -1,0 +1,30 @@
+@existsStudentId = 01a14d57-314e-75db-8702-6e079df98625
+@notFoundStudentId = 00000000-0000-0000-0000-000000000000
+
+### softDeleteStudent_Success
+DELETE {{api}}/v1/students/id/{{existsStudentId}}
+Content-Type: application/json
+
+> {%
+    client.test("Scenario 1: SHOULD return student soft deleted time WHEN success", () => {
+        client.assert(response.status === 200);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data !== null);
+        client.assert(response.body.message === null);
+    });
+%}
+
+### softDeleteStudent_StudentIdNotFound
+DELETE {{api}}/v1/students/id/{{notFoundStudentId}}
+Content-Type: application/json
+
+> {%
+    client.test("Scenario 1: SHOULD return student soft deleted time WHEN success", () => {
+        client.assert(response.status === 404);
+
+        client.assert(response.body !== null);
+        client.assert(response.body.data === null);
+        client.assert(response.body.message === "student.id.notFound");
+    });
+%}

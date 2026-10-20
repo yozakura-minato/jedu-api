@@ -1,7 +1,8 @@
 package com.jsal.jeduApi.student.repository;
 
 import com.jsal.jeduApi.common.exception.SqlExecutionException;
-import com.jsal.jeduApi.persistence.util.PersistenceMapper;
+import com.jsal.jeduApi.persistence.mapper.BaseMapperFactory;
+import com.jsal.jeduApi.persistence.mapper.CommonRowMapper;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
@@ -9,7 +10,6 @@ import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import lombok.RequiredArgsConstructor;
-import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -29,11 +29,11 @@ public class StudentRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
-            = JdbcTemplateMapperFactory.newInstance().newRowMapper(StudentUniqueValidation.class);
-    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER = JdbcTemplateMapperFactory.newInstance()
-            .addKeys("id").newRowMapper(StudentTitle.class);
-    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER = JdbcTemplateMapperFactory.newInstance()
-            .addKeys("id").newRowMapper(StudentProfile.class);
+            = BaseMapperFactory.rowMapper(StudentUniqueValidation.class);
+    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER
+            = BaseMapperFactory.rowMapper(StudentTitle.class);
+    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER
+            = BaseMapperFactory.rowMapper(StudentProfile.class);
 
     /**
      * @param studentDisplayId String
@@ -55,7 +55,8 @@ public class StudentRepository {
                         from students s
                         where s.email = :studentEmail
                         and s.is_deleted = false
-                    ) as exists_by_email;""";
+                    ) as exists_by_email;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentDisplayId", studentDisplayId)
                 .addValue("studentEmail", studentEmail);
@@ -90,7 +91,8 @@ public class StudentRepository {
                     :studentStatus,
                     now(),
                     :currentUserId
-                ) returning id;""";
+                ) returning id;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", request.displayId())
                 .addValue("fullName", request.fullName())
@@ -99,7 +101,7 @@ public class StudentRepository {
                 .addValue("hashedPassword", request.password())
                 .addValue("studentStatus", studentStatus.getDescription())
                 .addValue("currentUserId", currentUserId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.UUID_MAPPER).stream().findFirst()
+        return jdbcTemplate.query(sql, param, CommonRowMapper.UUID).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -110,7 +112,8 @@ public class StudentRepository {
         String sql = """
                 select s.id, s.display_id, s.full_name
                 from students s
-                where s.is_deleted is false;""";
+                where s.is_deleted is false;
+                """;
         return jdbcTemplate.query(sql, STUDENT_TITLE_MAPPER);
     }
 
@@ -123,7 +126,8 @@ public class StudentRepository {
                 select s.id, s.display_id, s.full_name, s.email, s.phone_number, s.status
                 from students s
                 where s.id = :studentId
-                and s.is_deleted is false;""";
+                and s.is_deleted is false;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentId", studentId);
         return jdbcTemplate.query(sql, param, STUDENT_PROFILE_MAPPER).stream().findFirst();
@@ -141,10 +145,11 @@ public class StudentRepository {
                     from students s
                     where s.id = :studentId
                     and s.is_deleted = false
-                ) as exists_by_id;""";
+                ) as exists_by_id;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
+        return jdbcTemplate.query(sql, param, CommonRowMapper.BOOLEAN).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -162,11 +167,12 @@ public class StudentRepository {
                     where s.display_id = :studentDisplayId
                     and s.id != :studentId
                     and s.is_deleted = false
-                ) as exists_by_display_id;""";
+                ) as exists_by_display_id;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentDisplayId", studentDisplayId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.BOOLEAN_MAPPER).stream().findFirst()
+        return jdbcTemplate.query(sql, param, CommonRowMapper.BOOLEAN).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -188,7 +194,8 @@ public class StudentRepository {
                     updated_by = :currentUserId
                 where s.id = :studentId
                 and s.is_deleted = false
-                returning s.updated_at;""";
+                returning s.updated_at;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", request.displayId())
                 .addValue("fullName", request.fullName())
@@ -196,17 +203,16 @@ public class StudentRepository {
                 .addValue("status", request.status().getDescription())
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
+        return jdbcTemplate.query(sql, param, CommonRowMapper.LOCAL_DATE_TIME).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
     /**
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Student soft deleted time
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @return Optional of student soft deleted time
      */
-    public LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public Optional<LocalDateTime> softDeleteStudent(UUID studentId, UUID currentUserId) {
         String sql = """
                 update students s
                 set
@@ -214,11 +220,12 @@ public class StudentRepository {
                     deleted_at = now(),
                     deleted_by = :currentUserId
                 where s.id = :studentId
-                returning s.deleted_at;""";
+                and s.is_deleted = false
+                returning s.deleted_at;
+                """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, PersistenceMapper.LOCAL_DATE_TIME_MAPPER).stream().findFirst()
-                .orElseThrow(SqlExecutionException::unexpectedResult);
+        return jdbcTemplate.query(sql, param, CommonRowMapper.LOCAL_DATE_TIME).stream().findFirst();
     }
 }
