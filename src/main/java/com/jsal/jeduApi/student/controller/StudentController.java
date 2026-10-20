@@ -32,7 +32,8 @@ public class StudentController {
             - Return: Created student ID
             - Validation:
                 - Student display ID must not conflict
-                - Student's email must not conflict""")
+                - Student's email must not conflict
+            """)
     public ResponseEntity<ApiResponseBody<UUID>> createStudent(@RequestBody @Valid CreateStudentRequest request) {
         UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;
         UUID createdStudentId = studentApiService.createStudent(request, currentUserId);
@@ -41,7 +42,8 @@ public class StudentController {
 
     @GetMapping(path = "/api/v1/students/all")
     @Operation(summary = "Find all student titles", description = """
-            - Return: Student title list""")
+            - Return: Student title list
+            """)
     public ResponseEntity<ApiResponseBody<List<StudentTitle>>> findAllStudentProfiles() {
         List<StudentTitle> studentTitleList = studentApiService.findAllTitles();
         return ResponseEntity.ok(ApiResponseBody.data(studentTitleList));
@@ -50,7 +52,8 @@ public class StudentController {
     @GetMapping(path = "/api/v1/students/id/{studentId}")
     @Operation(summary = "Find student profiles by ID", description = """
             - Return: Student profile
-            - Validation: Student ID must exist""")
+            - Validation: Student ID must exist
+            """)
     public ResponseEntity<ApiResponseBody<StudentProfile>> findStudentProfileByDisplayId(@PathVariable UUID studentId) {
         StudentProfile studentProfile = studentApiService.findStudentProfileById(studentId);
         return ResponseEntity.ok(ApiResponseBody.data(studentProfile));
@@ -61,7 +64,8 @@ public class StudentController {
             - Return: Student updated time
             - Validation:
                 - Student ID must exist
-                - Student display ID must not conflict""")
+                - Student display ID must not conflict
+            """)
     public ResponseEntity<ApiResponseBody<LocalDateTime>> update(
             @PathVariable UUID studentId, @RequestBody @Valid UpdateStudentRequest request
     ) {
@@ -73,7 +77,8 @@ public class StudentController {
     @DeleteMapping(path = "/api/v1/students/id/{studentId}")
     @Operation(summary = "Soft delete student", description = """
             - Return: Student soft deleted time
-            - Validation: Student ID must exists""")
+            - Validation: Student ID must exists
+            """)
     public ResponseEntity<ApiResponseBody<LocalDateTime>> delete(@PathVariable UUID studentId) {
         UUID currentUserID = SecurityConstant.CURRENT_EMPLOYEE_ID;
         LocalDateTime studentSoftDeletedTime = studentApiService.softDeleteStudent(studentId, currentUserID);
