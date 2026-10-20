@@ -2,19 +2,20 @@ package com.jsal.jeduApi.student.service.impl;
 
 import com.jsal.jeduApi.common.exception.ResourceConflictException;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
-import com.jsal.jeduApi.common.exception.SqlExecutionException;
-import com.jsal.jeduApi.common.util.CommonMessage;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
-import com.jsal.jeduApi.student.controller.response.StudentDisplayIdResponse;
+import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.StudentRepository;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
+import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
+import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import com.jsal.jeduApi.student.service.StudentApiService;
 import com.jsal.jeduApi.student.util.StudentMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
