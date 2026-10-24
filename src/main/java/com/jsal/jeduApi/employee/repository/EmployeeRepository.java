@@ -17,9 +17,9 @@ import java.util.UUID;
  */
 @Repository
 public class EmployeeRepository {
-    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_MAPPER
+    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_ROW_MAPPER
             = new DataClassRowMapper<>(EmployeeTitle.class);
-    private static final RowMapper<EmployeeProfile> EMPLOYEE_PROFILE_MAPPER
+    private static final RowMapper<EmployeeProfile> EMPLOYEE_PROFILE_ROW_MAPPER
             = new DataClassRowMapper<>(EmployeeProfile.class);
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -37,7 +37,7 @@ public class EmployeeRepository {
                 FROM employees
                 WHERE is_deleted = false;
                 """;
-        return jdbcTemplate.query(sql, EMPLOYEE_TITLE_MAPPER);
+        return jdbcTemplate.query(sql, EMPLOYEE_TITLE_ROW_MAPPER);
     }
 
     /**
@@ -61,6 +61,6 @@ public class EmployeeRepository {
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("employeeId", employeeId);
-        return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_MAPPER).stream().findFirst();
+        return jdbcTemplate.query(sql, param, EMPLOYEE_PROFILE_ROW_MAPPER).stream().findFirst();
     }
 }
