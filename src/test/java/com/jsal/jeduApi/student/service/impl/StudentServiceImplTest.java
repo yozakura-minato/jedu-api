@@ -5,6 +5,7 @@ import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.StudentRepository;
+import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
@@ -48,7 +49,7 @@ class StudentServiceImplTest {
         private static final CreateStudentRequest REQUEST = CreateStudentRequest.mock();
 
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return created student ID WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void createStudent_Success() {
             // Arrange
             var uniqueValidation = new StudentUniqueValidation(false, false);
@@ -72,7 +73,7 @@ class StudentServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN display ID conflicts")
+        @DisplayName(value = "Scenario 2: Display ID conflict")
         void create_DisplayIdConflict() {
             // Arrange
             var studentUniqueValidation = new StudentUniqueValidation(true, false);
@@ -92,7 +93,7 @@ class StudentServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 3: SHOULD throw exception WHEN email conflicts")
+        @DisplayName(value = "Scenario 3: Email conflict")
         void createStudent_EmailConflict() {
             // Arrange
             var studentUniqueValidation = new StudentUniqueValidation(false, true);
@@ -119,7 +120,7 @@ class StudentServiceImplTest {
     @DisplayName(value = "Test for: StudentApiService.findAllStudentTitles")
     class FindAllStudentTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return student title list WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void findAllTitles_Success() {
             // Arrange
             var expectedStudentTitleList = StudentTitle.mockList();
@@ -142,7 +143,7 @@ class StudentServiceImplTest {
     @DisplayName(value = "Test for: StudentApiService.findStudentProfileById")
     class FindStudentProfileByIdTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return student profile WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void findStudentProfileById_Success() {
             // Arrange
             var expectedStudentProfile = StudentProfile.mockWithId(STUDENT_ID);
@@ -159,7 +160,7 @@ class StudentServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN ID not found")
+        @DisplayName(value = "Scenario 2: Student ID not found")
         void findStudentProfileById_IdNotFound() {
             // Arrange
             when(studentRepository.selectStudentProfileById(STUDENT_ID)).thenReturn(Optional.empty());
@@ -184,7 +185,7 @@ class StudentServiceImplTest {
         private static final UpdateStudentRequest REQUEST = UpdateStudentRequest.mock();
 
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return student updated time WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void updateStudent_Success() {
             // Arrange
             when(studentRepository.existsStudentById(STUDENT_ID)).thenReturn(true);
@@ -204,7 +205,7 @@ class StudentServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN student ID not found")
+        @DisplayName(value = "Scenario 2: Student ID not found")
         void updateStudent_IdNotFound() {
             // Arrange
             when(studentRepository.existsStudentById(STUDENT_ID)).thenReturn(false);
@@ -222,7 +223,7 @@ class StudentServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 3: SHOULD throw exception WHEN student display ID conflicts")
+        @DisplayName(value = "Scenario 3: Display ID conflict")
         void updateStudent_DisplayIdConflicts() {
             // Arrange
             when(studentRepository.existsStudentById(STUDENT_ID)).thenReturn(true);
@@ -251,24 +252,24 @@ class StudentServiceImplTest {
     @DisplayName(value = "Test for: StudentApiService.softDeleteStudent")
     class SoftDeleteStudentTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return student soft deleted time WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void softDeleteStudent_Success() {
             // Arrange
-            var expectedSoftDeletedStudentTitle = StudentTitle.mock();
+            var expectedSoftDeletedStudentDisplayTitle = StudentDisplayTitle.mock();
             when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID))
-                    .thenReturn(Optional.of(expectedSoftDeletedStudentTitle));
+                    .thenReturn(Optional.of(expectedSoftDeletedStudentDisplayTitle));
 
             // Act
-            var actualSoftDeletedStudentTitle = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
+            var actualSoftDeletedStudentDisplayTitle = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
 
             // Assert
-            assertEquals(expectedSoftDeletedStudentTitle, actualSoftDeletedStudentTitle);
+            assertEquals(expectedSoftDeletedStudentDisplayTitle, actualSoftDeletedStudentDisplayTitle);
 
             verify(studentRepository, timeout(1)).softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN student ID not found")
+        @DisplayName(value = "Scenario 2: Student ID not found")
         void softDeleteStudent_IdNotFound() {
             // Arrange
             when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID)).thenReturn(Optional.empty());

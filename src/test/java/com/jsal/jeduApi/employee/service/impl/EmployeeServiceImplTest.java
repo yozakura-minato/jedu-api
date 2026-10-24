@@ -40,7 +40,7 @@ class EmployeeServiceImplTest {
     @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeTitles")
     class FindAllEmployeeTitlesTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employee title list WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void findAllEmployeeTitles_Success() {
             // Arrange
             var expectedEmployeeTitleList = EmployeeTitle.mockList();
@@ -63,7 +63,7 @@ class EmployeeServiceImplTest {
     @DisplayName(value = "Test for: EmployeeApiService.findEmployeeProfileById")
     class FindEmployeeProfileByIdTest {
         @Test
-        @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN success")
+        @DisplayName(value = "Scenario 1: Success")
         void findEmployeeProfileById_Success() {
             // Arrange
             var expectedEmployeeProfile = EmployeeProfile.mockWithId(EMPLOYEE_ID);
@@ -80,7 +80,7 @@ class EmployeeServiceImplTest {
         }
 
         @Test
-        @DisplayName(value = "Scenario 2: SHOULD throw exception WHEN ID not found")
+        @DisplayName(value = "Scenario 2: Employee ID not found")
         void findEmployeeProfileById_IdNotFound() {
             // Arrange
             when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID)).thenReturn(Optional.empty());
