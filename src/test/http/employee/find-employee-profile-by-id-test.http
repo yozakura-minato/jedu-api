@@ -1,8 +1,8 @@
-@validId = 11111111-1111-1111-1111-111111111111
-@notFoundId = 00000000-0000-0000-0000-000000000000
+@existsEmployeeId = 00000000-0000-0000-0000-000000000001
+@notFoundEmployeeId = 00000000-0000-0000-0000-000000000000
 
 ### findProfileByDisplayId_Success
-GET {{api}}/v1/employees/id/{{validId}}
+GET {{api}}/v1/employees/id/{{existsEmployeeId}}
 Content-Type: application/json
 
 > {%
@@ -16,7 +16,7 @@ Content-Type: application/json
 %}
 
 ### findEmployeeProfileByDisplayId_DisplayIdNotFound
-GET {{api}}/v1/employees/id/{{notFoundId}}
+GET {{api}}/v1/employees/id/{{notFoundEmployeeId}}
 Content-Type: application/json
 
 > {%

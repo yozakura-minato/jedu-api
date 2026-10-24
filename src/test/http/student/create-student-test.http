@@ -3,11 +3,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD1",
-  "fullName": "Student One",
-  "email": "std1@jedu.com",
-  "phoneNumber": "0909090909",
-  "password": "password4student1"
+  "displayId": "TESTA",
+  "fullName": "Student A",
+  "email": "student-a@jedu.com",
+  "phoneNumber": "0900000000",
+  "password": "password4student-a"
 }
 
 > {%
@@ -25,11 +25,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD2",
-  "fullName": "Student Two",
-  "email": "std2@jedu.com",
+  "displayId": "TESTB",
+  "fullName": "Student B",
+  "email": "student-b@jedu.com",
   "phoneNumber": null,
-  "password": "password4student2"
+  "password": "password4student-b"
 }
 
 > {%
@@ -47,11 +47,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD2",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "displayId": "TEST01",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -69,11 +69,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std2@jedu.com",
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-a@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -92,10 +92,10 @@ Content-Type: application/json
 
 {
   "displayId": null,
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -113,11 +113,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": " STD3 ",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "displayId": " TESTC ",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -135,11 +135,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
+  "displayId": "TESTC",
   "fullName": null,
-  "email": "std3@jedu.com",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -157,11 +157,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": " Student Three ",
-  "email": "std3@jedu.com",
+  "displayId": "TESTC",
+  "fullName": " Student C ",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -179,11 +179,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Studen Three",
+  "displayId": "TESTC",
+  "fullName": "Student C",
   "email": null,
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -201,11 +201,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std3atjedudotcom",
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-c-email",
   "phoneNumber": null,
-  "password": "password4student3"
+  "password": "password4student-c"
 }
 
 > {%
@@ -223,11 +223,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
-  "phoneNumber": "phone-number",
-  "password": "password4student3"
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
+  "phoneNumber": "0000000000",
+  "password": "password4student-c"
 }
 
 > {%
@@ -245,9 +245,9 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
   "password": null
 }
@@ -267,11 +267,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": " password4student3 "
+  "password": " password4student-c "
 }
 
 > {%
@@ -289,11 +289,11 @@ POST {{api}}/v1/students
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Student Three",
-  "email": "std3@jedu.com",
+  "displayId": "TESTC",
+  "fullName": "Student C",
+  "email": "student-c@jedu.com",
   "phoneNumber": null,
-  "password": "weakpassword"
+  "password": "123456789"
 }
 
 > {%

@@ -1,21 +1,19 @@
 package com.jsal.jeduApi.student.repository;
 
 import com.jsal.jeduApi.common.exception.SqlExecutionException;
-import com.jsal.jeduApi.persistence.mapper.BaseMapperFactory;
-import com.jsal.jeduApi.persistence.mapper.CommonRowMapper;
+import com.jsal.jeduApi.persistence.util.CommonRowMapper;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
-import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,38 +22,38 @@ import java.util.UUID;
  * @author Yozakura Minato
  */
 @Repository
-@RequiredArgsConstructor
 public class StudentRepository {
+    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
+            = new DataClassRowMapper<>(StudentUniqueValidation.class);
+    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER
+            = new DataClassRowMapper<>(StudentTitle.class);
+    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER
+            = new DataClassRowMapper<>(StudentProfile.class);
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
-            = BaseMapperFactory.rowMapper(StudentUniqueValidation.class);
-    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER
-            = BaseMapperFactory.rowMapper(StudentTitle.class);
-    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER
-            = BaseMapperFactory.rowMapper(StudentProfile.class);
+    public StudentRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     /**
      * @param studentDisplayId String
-     * @param studentEmail     Strong
+     * @param studentEmail     String
      * @return StudentUniqueValidation
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @throws SqlExecutionException Unexpected result
      */
     public StudentUniqueValidation existsStudentByDisplayIdOrEmail(String studentDisplayId, String studentEmail) {
         String sql = """
-                select
-                    exists (
-                        select 1
-                        from students s
-                        where s.display_id = :studentDisplayId
-                        and s.is_deleted = false
-                    ) as exists_by_display_id,
-                    exists (
-                        select 1
-                        from students s
-                        where s.email = :studentEmail
-                        and s.is_deleted = false
-                    ) as exists_by_email;
+                SELECT  EXISTS (SELECT 1
+                                FROM students
+                                WHERE display_id = :studentDisplayId
+                                AND is_deleted = false)
+                            AS exists_by_display_id,
+                        EXISTS (SELECT 1
+                                FROM students
+                                WHERE email = :studentEmail
+                                AND is_deleted = FALSE)
+                            AS exists_by_email;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentDisplayId", studentDisplayId)
@@ -68,30 +66,28 @@ public class StudentRepository {
      * @param request       CreateStudentRequest
      * @param studentStatus StudentStatus
      * @param currentUserId UUID
-     * @return UUID: of created student
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @return Created student UUID
+     * @throws SqlExecutionException unexpected result
      */
     public UUID insertStudent(CreateStudentRequest request, StudentStatus studentStatus, UUID currentUserId) {
         String sql = """
-                insert into students (
-                    display_id,
-                    full_name,
-                    email,
-                    phone_number,
-                    hashed_password,
-                    status,
-                    created_at,
-                    created_by
-                ) values (
-                    :displayId,
-                    :fullName,
-                    :email,
-                    :phoneNumber,
-                    :hashedPassword,
-                    :studentStatus,
-                    now(),
-                    :currentUserId
-                ) returning id;
+                INSERT INTO students (display_id,
+                                      full_name,
+                                      email,
+                                      phone_number,
+                                      hashed_password,
+                                      status,
+                                      created_at,
+                                      created_by)
+                VALUES (:displayId,
+                        :fullName,
+                        :email,
+                        :phoneNumber,
+                        :hashedPassword,
+                        :studentStatus,
+                        NOW(),
+                        :currentUserId)
+                RETURNING id;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", request.displayId())
@@ -110,9 +106,9 @@ public class StudentRepository {
      */
     public List<StudentTitle> selectAllStudentTitles() {
         String sql = """
-                select s.id, s.display_id, s.full_name
-                from students s
-                where s.is_deleted is false;
+                SELECT id, display_id, full_name
+                FROM students
+                WHERE is_deleted = FALSE;
                 """;
         return jdbcTemplate.query(sql, STUDENT_TITLE_MAPPER);
     }
@@ -123,10 +119,10 @@ public class StudentRepository {
      */
     public Optional<StudentProfile> selectStudentProfileById(UUID studentId) {
         String sql = """
-                select s.id, s.display_id, s.full_name, s.email, s.phone_number, s.status
-                from students s
-                where s.id = :studentId
-                and s.is_deleted is false;
+                SELECT id, display_id, full_name, email, phone_number, status
+                FROM students
+                WHERE id = :studentId
+                AND is_deleted = FALSE;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentId", studentId);
@@ -136,16 +132,15 @@ public class StudentRepository {
     /**
      * @param studentId UUID
      * @return boolean
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @throws SqlExecutionException Unexpected result
      */
     public boolean existsStudentById(UUID studentId) {
         String sql = """
-                select exists (
-                    select 1
-                    from students s
-                    where s.id = :studentId
-                    and s.is_deleted = false
-                ) as exists_by_id;
+                SELECT EXISTS (SELECT 1
+                               FROM students s
+                               WHERE s.id = :studentId
+                               AND s.is_deleted = FALSE)
+                    AS exists_by_id;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentId", studentId);
@@ -157,17 +152,16 @@ public class StudentRepository {
      * @param studentDisplayId String
      * @param studentId        UUID
      * @return boolean
-     * @throws SqlExecutionException when SQL execution is nothing
+     * @throws SqlExecutionException Unexpected result
      */
     public boolean existsStudentByDisplayAndIdIsNot(String studentDisplayId, UUID studentId) {
         String sql = """
-                select exists (
-                    select 1
-                    from students s
-                    where s.display_id = :studentDisplayId
-                    and s.id != :studentId
-                    and s.is_deleted = false
-                ) as exists_by_display_id;
+                SELECT EXISTS (SELECT 1
+                               FROM students
+                               WHERE display_id = :studentDisplayId
+                               AND id != :studentId
+                               AND is_deleted = FALSE)
+                    AS exists_by_display_id;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentDisplayId", studentDisplayId)
@@ -179,22 +173,19 @@ public class StudentRepository {
     /**
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
-     * @return LocalDateTime: student updated time
-     * @throws SqlExecutionException when SQL execution returns nothing
+     * @throws SqlExecutionException Unexpected effect
      */
-    public LocalDateTime updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId) {
+    public void updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId) {
         String sql = """
-                update students s
-                set
-                    display_id = :displayId,
-                    full_name = :fullName,
+                UPDATE students
+                SET display_id   = :displayId,
+                    full_name    = :fullName,
                     phone_number = :phoneNumber,
-                    status = :status,
-                    updated_at = now(),
-                    updated_by = :currentUserId
-                where s.id = :studentId
-                and s.is_deleted = false
-                returning s.updated_at;
+                    status       = :status,
+                    updated_at   = now(),
+                    updated_by   = :currentUserId
+                WHERE id = :studentId
+                AND is_deleted = FALSE;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("displayId", request.displayId())
@@ -203,29 +194,30 @@ public class StudentRepository {
                 .addValue("status", request.status().getDescription())
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, CommonRowMapper.LOCAL_DATE_TIME).stream().findFirst()
-                .orElseThrow(SqlExecutionException::unexpectedResult);
+        int affectedRows = jdbcTemplate.update(sql, param);
+        if (affectedRows != 1) {
+            throw SqlExecutionException.unexpectedEffect();
+        }
     }
 
     /**
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Optional of student soft deleted time
+     * @return Optional of soft deleted StudentTitle
      */
-    public Optional<LocalDateTime> softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public Optional<StudentTitle> softDeleteStudent(UUID studentId, UUID currentUserId) {
         String sql = """
-                update students s
-                set
-                    is_deleted = true,
-                    deleted_at = now(),
+                UPDATE students
+                SET is_deleted = TRUE,
+                    deleted_at = NOW(),
                     deleted_by = :currentUserId
-                where s.id = :studentId
-                and s.is_deleted = false
-                returning s.deleted_at;
+                WHERE id = :studentId
+                AND students.is_deleted = FALSE
+                RETURNING id, display_id, full_name;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, CommonRowMapper.LOCAL_DATE_TIME).stream().findFirst();
+        return jdbcTemplate.query(sql, param, STUDENT_TITLE_MAPPER).stream().findFirst();
     }
 }

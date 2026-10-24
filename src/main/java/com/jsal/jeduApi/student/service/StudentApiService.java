@@ -7,7 +7,6 @@ import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +22,12 @@ public interface StudentApiService {
      *
      * @param request       CreateStudentRequest
      * @param currentUserId UUID
-     * @return Created student ID
+     * @return Created student UUID
      */
     UUID createStudent(CreateStudentRequest request, UUID currentUserId);
 
     /**
-     * @return Student profile list
+     * @return List of StudentProfile
      */
     List<StudentTitle> findAllTitles();
 
@@ -39,7 +38,7 @@ public interface StudentApiService {
      * </ol>
      *
      * @param studentId UUID
-     * @return Student profile
+     * @return StudentProfile
      * @throws ResourceNotFoundException if {@code id} is not found
      */
     StudentProfile findStudentProfileById(UUID studentId);
@@ -48,17 +47,16 @@ public interface StudentApiService {
      * <ol>
      *     <li>If {@code studentId} not exist then throw exception</li>
      *     <li>If {@code request.displayId} conflicts then throw exception</li>
-     *     <li>Update & return</li>
+     *     <li>Update</li>
      * </ol>
      *
      * @param studentId     UUID
      * @param request       UpdateStudentRequest
      * @param currentUserId UUID
-     * @return Student updated time
      * @throws ResourceNotFoundException if {@code id} not exists
      * @throws ResourceConflictException if {@code displayId} conflict
      */
-    LocalDateTime updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId);
+    void updateStudent(UUID studentId, UpdateStudentRequest request, UUID currentUserId);
 
     /**
      * <ol>
@@ -68,7 +66,7 @@ public interface StudentApiService {
      *
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Student soft deleted time
+     * @return Student soft StudentTitle
      */
-    LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId);
+    StudentTitle softDeleteStudent(UUID studentId, UUID currentUserId);
 }

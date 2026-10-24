@@ -1,10 +1,11 @@
 package com.jsal.jeduApi.student.controller.request;
 
-import com.jsal.jeduApi.common.annotation.PhoneNumber;
 import com.jsal.jeduApi.common.annotation.TrimmedString;
+import com.jsal.jeduApi.common.annotation.regex.CommonRegex;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import com.jsal.jeduApi.student.util.StudentMessage;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * @param displayId   String
@@ -22,10 +23,21 @@ public record UpdateStudentRequest(
         @TrimmedString(message = StudentMessage.FullName.NOT_TRIMMED)
         String fullName,
 
-        @PhoneNumber(message = StudentMessage.PhoneNumber.INVALID_FORMAT)
+        @Pattern(regexp = CommonRegex.PHONE_NUMBER_REGEX, message = StudentMessage.PhoneNumber.INVALID_FORMAT)
         String phoneNumber,
 
         @NotNull(message = StudentMessage.Status.NULL)
         StudentStatus status
 ) {
+    /**
+     * @return UpdateStudentRequest
+     */
+    public static UpdateStudentRequest mock() {
+        return new UpdateStudentRequest(
+                "ST01",
+                "Student One",
+                null,
+                StudentStatus.CREATED
+        );
+    }
 }

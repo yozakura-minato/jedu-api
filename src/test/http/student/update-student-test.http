@@ -1,15 +1,17 @@
-@existsStudentId = 01a14d57-314e-75db-8702-6e079df98625
+@existsStudentId1 = 00000000-0000-0000-0000-000000000001
+@existsStudentId2 = 00000000-0000-0000-0000-000000000002
+@existsStudentId3 = 00000000-0000-0000-0000-000000000003
 @notFoundStudentId = 00000000-0000-0000-0000-000000000000
 
 ### updateStudentTest_Success_WithPhoneNumber
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId1}}
 Content-Type: application/json
 
 {
-  "displayId": "STD1E",
-  "fullName": "Edited Student One",
-  "phoneNumber": "0101010101",
-  "status": "ACTIVE"
+  "displayId": "TEST01 (updated)",
+  "fullName": "Student One (updated)",
+  "phoneNumber": "0100000001",
+  "status": "CREATED"
 }
 
 > {%
@@ -17,18 +19,18 @@ Content-Type: application/json
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
-        client.assert(response.body.data !== null);
+        client.assert(response.body.data === null);
         client.assert(response.body.message === null);
     });
 %}
 
 #### updateStudentTest_Success_WithoutPhoneNumber
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId2}}
 Content-Type: application/json
 
 {
-  "displayId": "STD1EE",
-  "fullName": "Edited Edited Student One",
+  "displayId": "TEST02 (updated)",
+  "fullName": "Student Two (updated)",
   "phoneNumber": null,
   "status": "CREATED"
 }
@@ -38,7 +40,7 @@ Content-Type: application/json
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
-        client.assert(response.body.data !== null);
+        client.assert(response.body.data === null);
         client.assert(response.body.message === null);
     });
 %}
@@ -48,9 +50,9 @@ PUT {{api}}/v1/students/id/{{notFoundStudentId}}
 Content-Type: application/json
 
 {
-  "displayId": "STD1EEE",
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "0102030405",
+  "displayId": "TEST03 (updated)",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -65,13 +67,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_DisplayId_Conflict
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": "STD2",
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "0102030405",
+  "displayId": "TEST01 (updated)",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -86,13 +88,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_DisplayId_Null
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
   "displayId": null,
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "0102030405",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -107,13 +109,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_DisplayId_NotTrimmed
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": " STD3 ",
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "0102030405",
+  "displayId": " TEST03 (updated) ",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -128,13 +130,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_FullName_Null
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
+  "displayId": "TEST03 (updated)",
   "fullName": null,
-  "phoneNumber": "0102030405",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -149,13 +151,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_FullName_NotTrimmed
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": " Edited Edited Edited Student One ",
-  "phoneNumber": "0102030405",
+  "displayId": "TEST03 (updated)",
+  "fullName": " Student Three (updated) ",
+  "phoneNumber": null,
   "status": "ACTIVE"
 }
 
@@ -170,13 +172,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_PhoneNumber_InvalidFormat
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "123456789",
+  "displayId": "TEST03 (updated)",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": "0000000000",
   "status": "ACTIVE"
 }
 
@@ -191,13 +193,13 @@ Content-Type: application/json
 %}
 
 ### updateStudent_Status_Null
-PUT {{api}}/v1/students/id/{{existsStudentId}}
+PUT {{api}}/v1/students/id/{{existsStudentId3}}
 Content-Type: application/json
 
 {
-  "displayId": "STD3",
-  "fullName": "Edited Edited Edited Student One",
-  "phoneNumber": "0102030405",
+  "displayId": "TEST03 (updated)",
+  "fullName": "Student Three (updated)",
+  "phoneNumber": null,
   "status": null
 }
 

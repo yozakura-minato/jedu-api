@@ -18,7 +18,6 @@ repositories {
 }
 
 val mockitoAgent = configurations.create("mockitoAgent")
-
 dependencies {
     // WEB & DOCUMENTATION ---------------------------------------------------------------------------------------------
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -41,11 +40,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
 
+    implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
-
-    implementation("org.simpleflatmapper:sfm-springjdbc:9.0.2")
 
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:2.0.1")
 
@@ -58,11 +56,6 @@ dependencies {
     // DEVELOPMENT UTILITIES -------------------------------------------------------------------------------------------
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
-
-    compileOnly("org.projectlombok:lombok:1.18.48")
-    annotationProcessor("org.projectlombok:lombok:1.18.48")
-    testCompileOnly("org.projectlombok:lombok:1.18.48")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
 
     mockitoAgent("org.mockito:mockito-core") {
         isTransitive = false

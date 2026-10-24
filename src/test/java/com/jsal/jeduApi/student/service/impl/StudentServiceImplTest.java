@@ -18,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,13 +45,7 @@ class StudentServiceImplTest {
     @Nested
     @DisplayName(value = "Test for: StudentApiService.createStudent")
     class CreateStudentTest {
-        private static final CreateStudentRequest REQUEST = new CreateStudentRequest(
-                "id4tester",
-                "Tester",
-                "tester@jedu.dev",
-                null,
-                "pw4tester"
-        );
+        private static final CreateStudentRequest REQUEST = CreateStudentRequest.mock();
 
         @Test
         @DisplayName(value = "Scenario 1: SHOULD return created student ID WHEN success")
@@ -130,11 +122,7 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return student title list WHEN success")
         void findAllTitles_Success() {
             // Arrange
-            var expectedStudentTitleList = List.of(
-                    new StudentTitle(UUID.randomUUID(), "std1", "Student 1"),
-                    new StudentTitle(UUID.randomUUID(), "std2", "Student 2"),
-                    new StudentTitle(UUID.randomUUID(), "std3", "Student 3")
-            );
+            var expectedStudentTitleList = StudentTitle.mockList();
             when(studentRepository.selectAllStudentTitles()).thenReturn(expectedStudentTitleList);
 
             // Act
@@ -157,14 +145,7 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return student profile WHEN success")
         void findStudentProfileById_Success() {
             // Arrange
-            var expectedStudentProfile = new StudentProfile(
-                    UUID.randomUUID(),
-                    "STD1",
-                    "Student 1",
-                    "std1@jedu.dev",
-                    null,
-                    StudentStatus.ACTIVE
-            );
+            var expectedStudentProfile = StudentProfile.mockWithId(STUDENT_ID);
             when(studentRepository.selectStudentProfileById(STUDENT_ID))
                     .thenReturn(Optional.of(expectedStudentProfile));
 
@@ -200,12 +181,7 @@ class StudentServiceImplTest {
     @Nested
     @DisplayName(value = "Test for: StudentApiService.updateStudent")
     class UpdateStudentTest {
-        private static final UpdateStudentRequest REQUEST = new UpdateStudentRequest(
-                "STD1",
-                "Student One",
-                null,
-                StudentStatus.ACTIVE
-        );
+        private static final UpdateStudentRequest REQUEST = UpdateStudentRequest.mock();
 
         @Test
         @DisplayName(value = "Scenario 1: SHOULD return student updated time WHEN success")
@@ -216,16 +192,10 @@ class StudentServiceImplTest {
             when(studentRepository.existsStudentByDisplayAndIdIsNot(REQUEST.displayId(), STUDENT_ID))
                     .thenReturn(false);
 
-            var expectedStudentUpdatedTime = LocalDateTime.now();
-            when(studentRepository.updateStudent(STUDENT_ID, REQUEST, CURRENT_USER_ID))
-                    .thenReturn(expectedStudentUpdatedTime);
-
             // Act
-            var actualStudentUpdatedTime = studentService.updateStudent(STUDENT_ID, REQUEST, CURRENT_USER_ID);
+            studentService.updateStudent(STUDENT_ID, REQUEST, CURRENT_USER_ID);
 
             // Assert
-            assertEquals(expectedStudentUpdatedTime, actualStudentUpdatedTime);
-
             verify(studentRepository, times(1)).existsStudentById(STUDENT_ID);
             verify(studentRepository, times(1))
                     .existsStudentByDisplayAndIdIsNot(REQUEST.displayId(), STUDENT_ID);
@@ -284,15 +254,15 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return student soft deleted time WHEN success")
         void softDeleteStudent_Success() {
             // Arrange
-            var expectedStudentSoftDeletedTime = LocalDateTime.now();
+            var expectedSoftDeletedStudentTitle = StudentTitle.mock();
             when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID))
-                    .thenReturn(Optional.of(expectedStudentSoftDeletedTime));
+                    .thenReturn(Optional.of(expectedSoftDeletedStudentTitle));
 
             // Act
-            var actualStudentSoftDeletedTime = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
+            var actualSoftDeletedStudentTitle = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
 
             // Assert
-            assertEquals(expectedStudentSoftDeletedTime, actualStudentSoftDeletedTime);
+            assertEquals(expectedSoftDeletedStudentTitle, actualSoftDeletedStudentTitle);
 
             verify(studentRepository, timeout(1)).softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
         }

@@ -3,11 +3,11 @@ package com.jsal.jeduApi.common.exception;
 /**
  * @author Yozakura Minato
  */
-public class SqlExecutionException extends RuntimeException {
+public final class SqlExecutionException extends RuntimeException {
     private static final String UNEXPECTED_RESULT_LOCALIZED_MESSAGE = "SQL execution returned unexpected result";
     private static final String UNEXPECTED_EFFECT_LOCALIZED_MESSAGE = "SQL execution has unexpected effects on rows";
 
-    public SqlExecutionException(String localizedMessage) {
+    private SqlExecutionException(String localizedMessage) {
         super(localizedMessage, null, false, false);
     }
 

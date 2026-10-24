@@ -21,4 +21,17 @@ public record StudentProfile(
         String phoneNumber,
         StudentStatus status
 ) {
+    /**
+     * @return StudentProfile
+     */
+    public static StudentProfile mockWithId(UUID studentId) {
+        return new StudentProfile(
+                studentId,
+                "ST01",
+                "Student One",
+                "student-one@jedu.com",
+                null,
+                StudentStatus.CREATED
+        );
+    }
 }

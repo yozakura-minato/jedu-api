@@ -4,7 +4,6 @@ import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.EmployeeRepository;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
-import com.jsal.jeduApi.employee.repository.type.EmployeeStatus;
 import com.jsal.jeduApi.employee.util.EmployeeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,11 +43,7 @@ class EmployeeServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return employee title list WHEN success")
         void findAllEmployeeTitles_Success() {
             // Arrange
-            var expectedEmployeeTitleList = List.of(
-                    new EmployeeTitle(UUID.randomUUID(), "ID01", "Tester 01"),
-                    new EmployeeTitle(UUID.randomUUID(), "ID02", "Tester 02"),
-                    new EmployeeTitle(UUID.randomUUID(), "ID03", "Tester 03")
-            );
+            var expectedEmployeeTitleList = EmployeeTitle.mockList();
             when(employeeRepository.selectAllEmployeeTitles()).thenReturn(expectedEmployeeTitleList);
 
             // Act
@@ -72,15 +66,7 @@ class EmployeeServiceImplTest {
         @DisplayName(value = "Scenario 1: SHOULD return employee profile WHEN success")
         void findEmployeeProfileById_Success() {
             // Arrange
-            var expectedEmployeeProfile = new EmployeeProfile(
-                    EMPLOYEE_ID,
-                    "id4tester",
-                    "JEDU Tester",
-                    "tester@jedu.dev",
-                    null,
-                    EmployeeStatus.ACTIVE,
-                    List.of("Department 1", "Department 2", "Department 3")
-            );
+            var expectedEmployeeProfile = EmployeeProfile.mockWithId(EMPLOYEE_ID);
             when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID))
                     .thenReturn(Optional.of(expectedEmployeeProfile));
 

@@ -1,11 +1,12 @@
 package com.jsal.jeduApi.student.controller.request;
 
-import com.jsal.jeduApi.common.annotation.Email;
-import com.jsal.jeduApi.common.annotation.PhoneNumber;
 import com.jsal.jeduApi.common.annotation.StrongPassword;
 import com.jsal.jeduApi.common.annotation.TrimmedString;
+import com.jsal.jeduApi.common.annotation.regex.CommonRegex;
 import com.jsal.jeduApi.student.util.StudentMessage;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * @param displayId   String
@@ -25,10 +26,10 @@ public record CreateStudentRequest(
         String fullName,
 
         @NotNull(message = StudentMessage.Email.NULL)
-        @Email(message = StudentMessage.Email.INVALID_FORMAT)
+        @Email(regexp = CommonRegex.EMAIL_REGEX, message = StudentMessage.Email.INVALID_FORMAT)
         String email,
 
-        @PhoneNumber(message = StudentMessage.PhoneNumber.INVALID_FORMAT)
+        @Pattern(regexp = CommonRegex.PHONE_NUMBER_REGEX, message = StudentMessage.PhoneNumber.INVALID_FORMAT)
         String phoneNumber,
 
         @NotNull(message = StudentMessage.Password.NULL)
@@ -36,4 +37,16 @@ public record CreateStudentRequest(
         @StrongPassword(message = StudentMessage.Password.WEAK)
         String password
 ) {
+    /**
+     * @return CreateStudentRequest
+     */
+    public static CreateStudentRequest mock() {
+        return new CreateStudentRequest(
+                "ST01",
+                "Student One",
+                "student-one@email.com",
+                null,
+                "pw4st1@jedu"
+        );
+    }
 }

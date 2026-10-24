@@ -11,11 +11,9 @@ import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import com.jsal.jeduApi.student.service.StudentApiService;
 import com.jsal.jeduApi.student.util.StudentMessage;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,9 +21,12 @@ import java.util.UUID;
  * @author Yozakura Minato
  */
 @Service
-@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentApiService {
     private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     /**
      * {@inheritDoc}
@@ -67,7 +68,7 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Transactional
     @Override
-    public LocalDateTime updateStudent(UUID id, UpdateStudentRequest request, UUID currentUserId) {
+    public void updateStudent(UUID id, UpdateStudentRequest request, UUID currentUserId) {
         boolean existsStudentById = studentRepository.existsStudentById(id);
         if (!existsStudentById) {
             throw new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND);
@@ -78,7 +79,7 @@ public class StudentServiceImpl implements StudentApiService {
             throw new ResourceConflictException(StudentMessage.DisplayId.CONFLICT);
         }
 
-        return studentRepository.updateStudent(id, request, currentUserId);
+        studentRepository.updateStudent(id, request, currentUserId);
     }
 
     /**
@@ -86,7 +87,7 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Transactional
     @Override
-    public LocalDateTime softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public StudentTitle softDeleteStudent(UUID studentId, UUID currentUserId) {
         return studentRepository.softDeleteStudent(studentId, currentUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND));
     }

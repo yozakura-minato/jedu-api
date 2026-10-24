@@ -2,7 +2,6 @@ package com.jsal.jeduApi.employee.repository.projection;
 
 import com.jsal.jeduApi.employee.repository.type.EmployeeStatus;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -12,7 +11,7 @@ import java.util.UUID;
  * @param email       String
  * @param phoneNumber String
  * @param status      EmployeeStatus
- * @param departments List of department name
+ * @param department  String: Department name
  * @author Yozakura Minato
  */
 public record EmployeeProfile(
@@ -22,6 +21,21 @@ public record EmployeeProfile(
         String email,
         String phoneNumber,
         EmployeeStatus status,
-        List<String> departments
+        String department
 ) {
+    /**
+     * @param id UUID
+     * @return EmployeeProfile
+     */
+    public static EmployeeProfile mockWithId(UUID id) {
+        return new EmployeeProfile(
+                id,
+                "EM01",
+                "Employee One",
+                "employee-one@jedu.com",
+                null,
+                EmployeeStatus.ACTIVE,
+                "Department One"
+        );
+    }
 }

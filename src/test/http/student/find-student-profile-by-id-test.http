@@ -1,8 +1,8 @@
-@existsId = 01a109b6-bd84-7905-9715-e246fcc30a8e
-@notFoundId = 00000000-0000-0000-0000-000000000000
+@existsStudentId = 00000000-0000-0000-0000-000000000001
+@notFoundStudentId = 00000000-0000-0000-0000-000000000000
 
 ### findStudentById_Success
-GET {{api}}/v1/students/id/{{existsId}}
+GET {{api}}/v1/students/id/{{existsStudentId}}
 Content-Type: application/json
 
 > {%
@@ -16,7 +16,7 @@ Content-Type: application/json
 %}
 
 ### findStudentById_NotFound
-GET {{api}}/v1/students/id/{{notFoundId}}
+GET {{api}}/v1/students/id/{{notFoundStudentId}}
 Content-Type: application/json
 
 > {%

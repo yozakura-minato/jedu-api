@@ -1,9 +1,17 @@
 package com.jsal.jeduApi.student.util;
 
+import com.jsal.jeduApi.common.exception.UtilityClassInstantiationException;
+
 /**
+ * Important: DO NOT instantiate or extend this class
+ *
  * @author Yozakura Minato
  */
-public class StudentMessage {
+public final class StudentMessage {
+    private StudentMessage() {
+        throw new UtilityClassInstantiationException();
+    }
+
     /**
      * @author Yozakura Minato
      */
