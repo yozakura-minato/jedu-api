@@ -53,7 +53,7 @@ public class StudentController {
     }
 
     @GetMapping(path = "/api/v1/students/id/{studentId}")
-    @Operation(summary = "Find student profiles by ID", description = """
+    @Operation(summary = "Find student profile by ID", description = """
             - Return: StudentProfile
             - Validation: Student id must exist
             """)
@@ -79,7 +79,7 @@ public class StudentController {
     @DeleteMapping(path = "/api/v1/students/id/{studentId}")
     @Operation(summary = "Soft delete student", description = """
             - Return: Soft deleted StudentTitle
-            - Validation: Student id must exists
+            - Validation: Student id must exist
             """)
     public ResponseEntity<ApiResponseBody<StudentDisplayTitle>> softDelete(@PathVariable UUID studentId) {
         UUID currentUserID = SecurityConstant.CURRENT_EMPLOYEE_ID;
