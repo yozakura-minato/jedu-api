@@ -1,13 +1,13 @@
 -- Back office master --------------------------------------------------------------------------------------------------
-INSERT INTO departments (id, display_id, name)
-VALUES (1, 'TEST1', 'Department One'),
-       (2, 'TEST2', 'Department Two'),
-       (3, 'TEST3', 'Department Three');
+INSERT INTO departments (id, display_id, name, is_deleted, synchronized_at)
+VALUES (1, 'TEST1', 'Department One', FALSE, NOW()),
+       (2, 'TEST2', 'Department Two', FALSE, NOW()),
+       (3, 'TEST3', 'Department Three', FALSE, NOW());
 
-INSERT INTO roles (id, department_id, display_id, name)
-VALUES (1, 1, 'TEST1', 'Role One'),
-       (2, 2, 'TEST2', 'Role Two'),
-       (3, 3, 'TEST3', 'Role Three');
+INSERT INTO department_roles (id, department_id, display_id, name, is_deleted, synchronized_at)
+VALUES (1, 1, 'TEST1', 'Role One', FALSE, NOW()),
+       (2, 2, 'TEST2', 'Role Two', FALSE, NOW()),
+       (3, 3, 'TEST3', 'Role Three', FALSE, NOW());
 
 INSERT INTO employees (id,
                        department_id,
@@ -16,7 +16,9 @@ INSERT INTO employees (id,
                        email,
                        phone_number,
                        hashed_password,
-                       status)
+                       status,
+                       is_deleted,
+                       synchronized_at)
 VALUES ('00000000-0000-0000-0000-000000000001',
         1,
         'TEST1',
@@ -24,7 +26,9 @@ VALUES ('00000000-0000-0000-0000-000000000001',
         'employee-one@jsys.com',
         '0100000000',
         'password4employee-one',
-        'CREATED'),
+        'CREATED',
+        FALSE,
+        NOW()),
        ('00000000-0000-0000-0000-000000000002',
         2,
         'TEST2',
@@ -32,7 +36,9 @@ VALUES ('00000000-0000-0000-0000-000000000001',
         'employee-two@jsys.com',
         '0200000000',
         'password4employee-two',
-        'CREATED'),
+        'CREATED',
+        FALSE,
+        NOW()),
        ('00000000-0000-0000-0000-000000000003',
         3,
         'TEST3',
@@ -40,7 +46,9 @@ VALUES ('00000000-0000-0000-0000-000000000001',
         'employee-three@jsys.com',
         '0300000000',
         'password4employee-three',
-        'CREATED');
+        'CREATED',
+        FALSE,
+        NOW());
 
 INSERT INTO employee_roles (employee_id, role_id)
 VALUES ('00000000-0000-0000-0000-000000000001', 1),

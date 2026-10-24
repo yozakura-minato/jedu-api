@@ -12,7 +12,7 @@ FROM employees
 WHERE display_id ILIKE 'TEST%';
 
 DELETE
-FROM roles
+FROM department_roles
 WHERE display_id ILIKE 'TEST%';
 
 DELETE
