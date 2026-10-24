@@ -5,6 +5,7 @@ import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.StudentRepository;
+import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
@@ -87,7 +88,7 @@ public class StudentServiceImpl implements StudentApiService {
      */
     @Transactional
     @Override
-    public StudentTitle softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public StudentDisplayTitle softDeleteStudent(UUID studentId, UUID currentUserId) {
         return studentRepository.softDeleteStudent(studentId, currentUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND));
     }

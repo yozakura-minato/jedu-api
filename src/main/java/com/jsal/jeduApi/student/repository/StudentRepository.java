@@ -4,6 +4,7 @@ import com.jsal.jeduApi.common.exception.SqlExecutionException;
 import com.jsal.jeduApi.persistence.util.CommonRowMapper;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
+import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
@@ -23,12 +24,14 @@ import java.util.UUID;
  */
 @Repository
 public class StudentRepository {
-    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_MAPPER
+    private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_ROW_MAPPER
             = new DataClassRowMapper<>(StudentUniqueValidation.class);
-    private static final RowMapper<StudentTitle> STUDENT_TITLE_MAPPER
+    private static final RowMapper<StudentTitle> STUDENT_TITLE_ROW_MAPPER
             = new DataClassRowMapper<>(StudentTitle.class);
-    private static final RowMapper<StudentProfile> STUDENT_PROFILE_MAPPER
+    private static final RowMapper<StudentProfile> STUDENT_PROFILE_ROW_MAPPER
             = new DataClassRowMapper<>(StudentProfile.class);
+    private static final RowMapper<StudentDisplayTitle> STUDENT_DISPLAY_TITLE_ROW_MAPPER
+            = new DataClassRowMapper<>(StudentDisplayTitle.class);
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -58,7 +61,7 @@ public class StudentRepository {
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentDisplayId", studentDisplayId)
                 .addValue("studentEmail", studentEmail);
-        return jdbcTemplate.query(sql, param, STUDENT_UNIQUE_VALIDATION_MAPPER).stream().findFirst()
+        return jdbcTemplate.query(sql, param, STUDENT_UNIQUE_VALIDATION_ROW_MAPPER).stream().findFirst()
                 .orElseThrow(SqlExecutionException::unexpectedResult);
     }
 
@@ -110,7 +113,7 @@ public class StudentRepository {
                 FROM students
                 WHERE is_deleted = FALSE;
                 """;
-        return jdbcTemplate.query(sql, STUDENT_TITLE_MAPPER);
+        return jdbcTemplate.query(sql, STUDENT_TITLE_ROW_MAPPER);
     }
 
     /**
@@ -126,7 +129,7 @@ public class StudentRepository {
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, STUDENT_PROFILE_MAPPER).stream().findFirst();
+        return jdbcTemplate.query(sql, param, STUDENT_PROFILE_ROW_MAPPER).stream().findFirst();
     }
 
     /**
@@ -203,9 +206,9 @@ public class StudentRepository {
     /**
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Optional of soft deleted StudentTitle
+     * @return Optional of soft deleted StudentDisplayTitle
      */
-    public Optional<StudentTitle> softDeleteStudent(UUID studentId, UUID currentUserId) {
+    public Optional<StudentDisplayTitle> softDeleteStudent(UUID studentId, UUID currentUserId) {
         String sql = """
                 UPDATE students
                 SET is_deleted = TRUE,
@@ -213,11 +216,11 @@ public class StudentRepository {
                     deleted_by = :currentUserId
                 WHERE id = :studentId
                 AND students.is_deleted = FALSE
-                RETURNING id, display_id, full_name;
+                RETURNING display_id, full_name;
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("currentUserId", currentUserId)
                 .addValue("studentId", studentId);
-        return jdbcTemplate.query(sql, param, STUDENT_TITLE_MAPPER).stream().findFirst();
+        return jdbcTemplate.query(sql, param, STUDENT_DISPLAY_TITLE_ROW_MAPPER).stream().findFirst();
     }
 }

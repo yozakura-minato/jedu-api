@@ -4,6 +4,7 @@ import com.jsal.jeduApi.common.response.ApiResponseBody;
 import com.jsal.jeduApi.security.util.SecurityConstant;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
+import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.service.StudentApiService;
@@ -80,9 +81,9 @@ public class StudentController {
             - Return: Soft deleted StudentTitle
             - Validation: Student id must exists
             """)
-    public ResponseEntity<ApiResponseBody<StudentTitle>> delete(@PathVariable UUID studentId) {
+    public ResponseEntity<ApiResponseBody<StudentDisplayTitle>> softDelete(@PathVariable UUID studentId) {
         UUID currentUserID = SecurityConstant.CURRENT_EMPLOYEE_ID;
-        StudentTitle softDeleteStudentTitle = studentApiService.softDeleteStudent(studentId, currentUserID);
+        StudentDisplayTitle softDeleteStudentTitle = studentApiService.softDeleteStudent(studentId, currentUserID);
         return ResponseEntity.ok(ApiResponseBody.data(softDeleteStudentTitle));
     }
 }

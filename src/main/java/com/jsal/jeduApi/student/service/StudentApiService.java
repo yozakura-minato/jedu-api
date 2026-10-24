@@ -4,6 +4,7 @@ import com.jsal.jeduApi.common.exception.ResourceConflictException;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
+import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
 import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 
@@ -66,7 +67,7 @@ public interface StudentApiService {
      *
      * @param studentId     UUID
      * @param currentUserId UUID
-     * @return Student soft StudentTitle
+     * @return Soft deleted StudentDisplayTitle
      */
-    StudentTitle softDeleteStudent(UUID studentId, UUID currentUserId);
+    StudentDisplayTitle softDeleteStudent(UUID studentId, UUID currentUserId);
 }
