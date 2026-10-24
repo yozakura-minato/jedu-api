@@ -6,7 +6,7 @@ DELETE {{api}}/v1/students/id/{{existsStudentId}}
 Content-Type: application/json
 
 > {%
-    client.test("Scenario 1: SHOULD return student soft deleted time WHEN success", () => {
+    client.test("Success", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -20,7 +20,7 @@ DELETE {{api}}/v1/students/id/{{notFoundStudentId}}
 Content-Type: application/json
 
 > {%
-    client.test("Scenario 1: SHOULD return student soft deleted time WHEN success", () => {
+    client.test("Student ID not found", () => {
         client.assert(response.status === 404);
 
         client.assert(response.body !== null);

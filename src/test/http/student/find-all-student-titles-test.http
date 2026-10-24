@@ -3,7 +3,7 @@ GET {{api}}/v1/students/all
 Content-Type: application/json
 
 > {%
-    client.test("Scenario 1: SHOULD return student title list WHEN success", () => {
+    client.test("Scenario 1: Success", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);

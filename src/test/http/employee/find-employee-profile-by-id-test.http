@@ -6,7 +6,7 @@ GET {{api}}/v1/employees/id/{{existsEmployeeId}}
 Content-Type: application/json
 
 > {%
-    client.test("Scenario 1: SHOULD return employee profile WHEN success", () => {
+    client.test("Scenario 1: Success", () => {
         client.assert(response.status === 200);
 
         client.assert(response.body !== null);
@@ -20,7 +20,7 @@ GET {{api}}/v1/employees/id/{{notFoundEmployeeId}}
 Content-Type: application/json
 
 > {%
-    client.test("Scenario 2: SHOULD return error message WHEN student display ID not found", () => {
+    client.test("Scenario 2: Student display ID not found", () => {
         client.assert(response.status === 404);
 
         client.assert(response.body !== null);
