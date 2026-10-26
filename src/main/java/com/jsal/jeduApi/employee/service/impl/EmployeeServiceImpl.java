@@ -3,7 +3,6 @@ package com.jsal.jeduApi.employee.service.impl;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.EmployeeRepository;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
-import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import com.jsal.jeduApi.employee.service.EmployeeApiService;
 import com.jsal.jeduApi.employee.util.EmployeeMessage;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,8 @@ public class EmployeeServiceImpl implements EmployeeApiService {
     }
 
     @Override
-    public List<EmployeeTitle> findAllEmployeeTitles() {
-        return employeeRepository.selectAllEmployeeTitles();
+    public List<EmployeeProfile> findAllEmployeeProfiles() {
+        return employeeRepository.selectAllEmployeeProfiles();
     }
 
     /**

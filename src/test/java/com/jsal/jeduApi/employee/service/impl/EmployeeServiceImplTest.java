@@ -3,7 +3,6 @@ package com.jsal.jeduApi.employee.service.impl;
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.EmployeeRepository;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
-import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import com.jsal.jeduApi.employee.util.EmployeeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,22 +36,22 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeTitles")
-    class FindAllEmployeeTitlesTest {
+    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeProfileLists")
+    class FindAllEmployeeProfileListsTest {
         @Test
         @DisplayName(value = "Scenario 1: Success")
-        void findAllEmployeeTitles_Success() {
+        void findAllEmployeeProfileLists_Success() {
             // Arrange
-            var expectedEmployeeTitleList = EmployeeTitle.mockList();
-            when(employeeRepository.selectAllEmployeeTitles()).thenReturn(expectedEmployeeTitleList);
+            var expectedEmployeeProfileList = EmployeeProfile.mockList();
+            when(employeeRepository.selectAllEmployeeProfiles()).thenReturn(expectedEmployeeProfileList);
 
             // Act
-            var actualEmployeeTitleList = employeeService.findAllEmployeeTitles();
+            var actualEmployeeProfileList = employeeService.findAllEmployeeProfiles();
 
             // Assert
-            assertEquals(expectedEmployeeTitleList, actualEmployeeTitleList);
+            assertEquals(expectedEmployeeProfileList, actualEmployeeProfileList);
 
-            verify(employeeRepository, times(1)).selectAllEmployeeTitles();
+            verify(employeeRepository, times(1)).selectAllEmployeeProfiles();
         }
     }
 

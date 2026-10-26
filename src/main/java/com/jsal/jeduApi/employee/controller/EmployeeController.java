@@ -2,7 +2,6 @@ package com.jsal.jeduApi.employee.controller;
 
 import com.jsal.jeduApi.common.response.ApiResponseBody;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
-import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import com.jsal.jeduApi.employee.service.EmployeeApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,12 +26,12 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/api/v1/employees/all")
-    @Operation(summary = "Find all employee titles", description = """
-            - Return: List of EmployeeTitle
+    @Operation(summary = "Find all employee profiles", description = """
+            - Return: List of EmployeeProfile
             """)
-    public ResponseEntity<ApiResponseBody<List<EmployeeTitle>>> findAllEmployeeTitles() {
-        List<EmployeeTitle> employeeTitleList = employeeApiService.findAllEmployeeTitles();
-        return ResponseEntity.ok(ApiResponseBody.data(employeeTitleList));
+    public ResponseEntity<ApiResponseBody<List<EmployeeProfile>>> findAllEmployeeProfiles() {
+        List<EmployeeProfile> employeeProfileList = employeeApiService.findAllEmployeeProfiles();
+        return ResponseEntity.ok(ApiResponseBody.data(employeeProfileList));
     }
 
     @GetMapping(path = "/api/v1/employees/id/{employeeId}")

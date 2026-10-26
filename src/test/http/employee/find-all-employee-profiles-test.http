@@ -1,4 +1,4 @@
-### findAllEmployeeTitles_Success
+### findAllEmployeeProfiles_Success
 GET {{api}}/v1/students/all
 Content-Type: application/json
 

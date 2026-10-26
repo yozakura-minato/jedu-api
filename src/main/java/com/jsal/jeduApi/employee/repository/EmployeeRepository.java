@@ -1,7 +1,6 @@
 package com.jsal.jeduApi.employee.repository;
 
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
-import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,8 +16,6 @@ import java.util.UUID;
  */
 @Repository
 public class EmployeeRepository {
-    private static final RowMapper<EmployeeTitle> EMPLOYEE_TITLE_ROW_MAPPER
-            = new DataClassRowMapper<>(EmployeeTitle.class);
     private static final RowMapper<EmployeeProfile> EMPLOYEE_PROFILE_ROW_MAPPER
             = new DataClassRowMapper<>(EmployeeProfile.class);
 
@@ -29,15 +26,23 @@ public class EmployeeRepository {
     }
 
     /**
-     * @return List of EmployeeTitle
+     * @return List of EmployeeProfile
      */
-    public List<EmployeeTitle> selectAllEmployeeTitles() {
+    public List<EmployeeProfile> selectAllEmployeeProfiles() {
         String sql = """
-                SELECT id, display_id, full_name
-                FROM employees
-                WHERE is_deleted = false;
+                SELECT empl.id,
+                       empl.display_id,
+                       empl.full_name,
+                       empl.email,
+                       empl.phone_number,
+                       empl.status,
+                       dept.name AS department
+                FROM employees empl
+                    JOIN departments dept ON empl.department_id = dept.id
+                    AND dept.is_deleted = FALSE
+                WHERE empl.is_deleted = FALSE;
                 """;
-        return jdbcTemplate.query(sql, EMPLOYEE_TITLE_ROW_MAPPER);
+        return jdbcTemplate.query(sql, EMPLOYEE_PROFILE_ROW_MAPPER);
     }
 
     /**

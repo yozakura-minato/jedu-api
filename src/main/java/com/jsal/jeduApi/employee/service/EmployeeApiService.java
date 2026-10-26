@@ -2,7 +2,6 @@ package com.jsal.jeduApi.employee.service;
 
 import com.jsal.jeduApi.common.exception.ResourceNotFoundException;
 import com.jsal.jeduApi.employee.repository.projection.EmployeeProfile;
-import com.jsal.jeduApi.employee.repository.projection.EmployeeTitle;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +13,7 @@ public interface EmployeeApiService {
     /**
      * @return List of EmployeeProfile
      */
-    List<EmployeeTitle> findAllEmployeeTitles();
+    List<EmployeeProfile> findAllEmployeeProfiles();
 
     /**
      * <ol>
