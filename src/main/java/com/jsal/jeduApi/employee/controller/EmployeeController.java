@@ -26,21 +26,21 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/api/v1/employees/all")
-    @Operation(summary = "Find all employee profiles", description = """
+    @Operation(summary = "Find all employees", description = """
             - Return: List of EmployeeProfile
             """)
-    public ResponseEntity<ApiResponseBody<List<EmployeeProfile>>> findAllEmployeeProfiles() {
-        List<EmployeeProfile> employeeProfileList = employeeApiService.findAllEmployeeProfiles();
+    public ResponseEntity<ApiResponseBody<List<EmployeeProfile>>> findAllEmployees() {
+        List<EmployeeProfile> employeeProfileList = employeeApiService.findAllEmployees();
         return ResponseEntity.ok(ApiResponseBody.data(employeeProfileList));
     }
 
     @GetMapping(path = "/api/v1/employees/id/{employeeId}")
-    @Operation(summary = "Find employee profile by ID", description = """
+    @Operation(summary = "Find employee by ID", description = """
             - Return: EmployeeProfile
-            - Validation: Employee id must exists
+            - Validation: Employee ID must exists
             """)
-    public ResponseEntity<ApiResponseBody<EmployeeProfile>> findEmployeeProfileById(@PathVariable UUID employeeId) {
-        EmployeeProfile employeeProfile = employeeApiService.findEmployeeProfileById(employeeId);
+    public ResponseEntity<ApiResponseBody<EmployeeProfile>> findEmployeeById(@PathVariable UUID employeeId) {
+        EmployeeProfile employeeProfile = employeeApiService.findEmployeeById(employeeId);
         return ResponseEntity.ok(ApiResponseBody.data(employeeProfile));
     }
 }

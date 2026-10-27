@@ -30,7 +30,7 @@ public interface StudentApiService {
     /**
      * @return List of StudentProfile
      */
-    List<StudentTitle> findAllTitles();
+    List<StudentTitle> findAllStudents();
 
     /**
      * <ol>
@@ -42,7 +42,7 @@ public interface StudentApiService {
      * @return StudentProfile
      * @throws ResourceNotFoundException if {@code id} is not found
      */
-    StudentProfile findStudentProfileById(UUID studentId);
+    StudentProfile findStudentById(UUID studentId);
 
     /**
      * <ol>

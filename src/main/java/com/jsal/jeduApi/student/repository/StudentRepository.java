@@ -107,7 +107,7 @@ public class StudentRepository {
     /**
      * @return List of StudentTitle
      */
-    public List<StudentTitle> selectAllStudentTitles() {
+    public List<StudentTitle> selectAllStudents() {
         String sql = """
                 SELECT id, display_id, full_name
                 FROM students
@@ -120,7 +120,7 @@ public class StudentRepository {
      * @param studentId UUID
      * @return Optional of StudentProfile
      */
-    public Optional<StudentProfile> selectStudentProfileById(UUID studentId) {
+    public Optional<StudentProfile> selectStudentById(UUID studentId) {
         String sql = """
                 SELECT id, display_id, full_name, email, phone_number, status
                 FROM students

@@ -44,21 +44,21 @@ public class StudentController {
     }
 
     @GetMapping(path = "/api/v1/students/all")
-    @Operation(summary = "Find all student titles", description = """
+    @Operation(summary = "Find all students", description = """
             - Return: List of StudentTitle
             """)
-    public ResponseEntity<ApiResponseBody<List<StudentTitle>>> findAllStudentProfiles() {
-        List<StudentTitle> studentTitleList = studentApiService.findAllTitles();
+    public ResponseEntity<ApiResponseBody<List<StudentTitle>>> findAllStudents() {
+        List<StudentTitle> studentTitleList = studentApiService.findAllStudents();
         return ResponseEntity.ok(ApiResponseBody.data(studentTitleList));
     }
 
     @GetMapping(path = "/api/v1/students/id/{studentId}")
-    @Operation(summary = "Find student profile by ID", description = """
+    @Operation(summary = "Find student by ID", description = """
             - Return: StudentProfile
             - Validation: Student id must exist
             """)
-    public ResponseEntity<ApiResponseBody<StudentProfile>> findStudentProfileByDisplayId(@PathVariable UUID studentId) {
-        StudentProfile studentProfile = studentApiService.findStudentProfileById(studentId);
+    public ResponseEntity<ApiResponseBody<StudentProfile>> findStudentById(@PathVariable UUID studentId) {
+        StudentProfile studentProfile = studentApiService.findStudentById(studentId);
         return ResponseEntity.ok(ApiResponseBody.data(studentProfile));
     }
 
@@ -68,7 +68,7 @@ public class StudentController {
                 - Student id must exist
                 - Student displayId must not conflict
             """)
-    public ResponseEntity<ApiResponseBody<LocalDateTime>> update(
+    public ResponseEntity<ApiResponseBody<LocalDateTime>> updateStudent(
             @PathVariable UUID studentId, @RequestBody @Valid UpdateStudentRequest request
     ) {
         UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;

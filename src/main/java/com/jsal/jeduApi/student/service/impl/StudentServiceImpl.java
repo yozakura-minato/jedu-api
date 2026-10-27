@@ -51,16 +51,16 @@ public class StudentServiceImpl implements StudentApiService {
      * {@inheritDoc}
      */
     @Override
-    public List<StudentTitle> findAllTitles() {
-        return studentRepository.selectAllStudentTitles();
+    public List<StudentTitle> findAllStudents() {
+        return studentRepository.selectAllStudents();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public StudentProfile findStudentProfileById(UUID id) {
-        return studentRepository.selectStudentProfileById(id)
+    public StudentProfile findStudentById(UUID id) {
+        return studentRepository.selectStudentById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(StudentMessage.Id.NOT_FOUND));
     }
 

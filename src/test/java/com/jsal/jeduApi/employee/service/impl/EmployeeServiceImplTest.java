@@ -36,22 +36,22 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployeeProfileLists")
-    class FindAllEmployeeProfileListsTest {
+    @DisplayName(value = "Test for: EmployeeApiService.findAllEmployes")
+    class FindAllEmployeesTest {
         @Test
         @DisplayName(value = "Scenario 1: Success")
-        void findAllEmployeeProfileLists_Success() {
+        void findAllEmployeesTest_Success() {
             // Arrange
-            var expectedEmployeeProfileList = EmployeeProfile.mockList();
-            when(employeeRepository.selectAllEmployeeProfiles()).thenReturn(expectedEmployeeProfileList);
+            var expectedEmployeeList = EmployeeProfile.mockList();
+            when(employeeRepository.selectAllEmployees()).thenReturn(expectedEmployeeList);
 
             // Act
-            var actualEmployeeProfileList = employeeService.findAllEmployeeProfiles();
+            var actualEmployeeList = employeeService.findAllEmployees();
 
             // Assert
-            assertEquals(expectedEmployeeProfileList, actualEmployeeProfileList);
+            assertEquals(expectedEmployeeList, actualEmployeeList);
 
-            verify(employeeRepository, times(1)).selectAllEmployeeProfiles();
+            verify(employeeRepository, times(1)).selectAllEmployees();
         }
     }
 
@@ -59,39 +59,39 @@ class EmployeeServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: EmployeeApiService.findEmployeeProfileById")
-    class FindEmployeeProfileByIdTest {
+    @DisplayName(value = "Test for: EmployeeApiService.findEmployeeById")
+    class FindEmployeeByIdTest {
         @Test
         @DisplayName(value = "Scenario 1: Success")
-        void findEmployeeProfileById_Success() {
+        void findEmployeeById_Success() {
             // Arrange
-            var expectedEmployeeProfile = EmployeeProfile.mockWithId(EMPLOYEE_ID);
-            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID))
-                    .thenReturn(Optional.of(expectedEmployeeProfile));
+            var expectedEmployee = EmployeeProfile.mockWithId(EMPLOYEE_ID);
+            when(employeeRepository.selectEmployeeById(EMPLOYEE_ID))
+                    .thenReturn(Optional.of(expectedEmployee));
 
             // Act
-            var actualEmployeeProfile = employeeService.findEmployeeProfileById(EMPLOYEE_ID);
+            var actualEmployee = employeeService.findEmployeeById(EMPLOYEE_ID);
 
             // Assert
-            assertEquals(expectedEmployeeProfile, actualEmployeeProfile);
+            assertEquals(expectedEmployee, actualEmployee);
 
-            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
+            verify(employeeRepository, times(1)).selectEmployeeById(EMPLOYEE_ID);
         }
 
         @Test
         @DisplayName(value = "Scenario 2: Employee ID not found")
-        void findEmployeeProfileById_IdNotFound() {
+        void findEmployeeById_IdNotFound() {
             // Arrange
-            when(employeeRepository.selectEmployeeProfileById(EMPLOYEE_ID)).thenReturn(Optional.empty());
+            when(employeeRepository.selectEmployeeById(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
             // Act
             var exception = assertThrows(ResourceNotFoundException.class,
-                    () -> employeeService.findEmployeeProfileById(EMPLOYEE_ID));
+                    () -> employeeService.findEmployeeById(EMPLOYEE_ID));
 
             // Assert
             assertEquals(EmployeeMessage.Id.NOT_FOUND, exception.getMessage());
 
-            verify(employeeRepository, times(1)).selectEmployeeProfileById(EMPLOYEE_ID);
+            verify(employeeRepository, times(1)).selectEmployeeById(EMPLOYEE_ID);
         }
     }
 }

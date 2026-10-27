@@ -13,7 +13,7 @@ public interface EmployeeApiService {
     /**
      * @return List of EmployeeProfile
      */
-    List<EmployeeProfile> findAllEmployeeProfiles();
+    List<EmployeeProfile> findAllEmployees();
 
     /**
      * <ol>
@@ -25,5 +25,5 @@ public interface EmployeeApiService {
      * @return EmployeeProfile
      * @throws ResourceNotFoundException when {@code employeeId} is not found
      */
-    EmployeeProfile findEmployeeProfileById(UUID employeeId);
+    EmployeeProfile findEmployeeById(UUID employeeId);
 }

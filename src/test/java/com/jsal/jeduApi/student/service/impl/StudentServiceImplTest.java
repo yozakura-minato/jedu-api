@@ -52,9 +52,9 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: Success")
         void createStudent_Success() {
             // Arrange
-            var uniqueValidation = new StudentUniqueValidation(false, false);
+            var studentUniqueValidation = new StudentUniqueValidation(false, false);
             when(studentRepository.existsStudentByDisplayIdOrEmail(REQUEST.displayId(), REQUEST.email()))
-                    .thenReturn(uniqueValidation);
+                    .thenReturn(studentUniqueValidation);
 
             var expectedCreatedStudentId = UUID.randomUUID();
             when(studentRepository.insertStudent(REQUEST, StudentStatus.CREATED, CURRENT_USER_ID))
@@ -74,7 +74,7 @@ class StudentServiceImplTest {
 
         @Test
         @DisplayName(value = "Scenario 2: Display ID conflict")
-        void create_DisplayIdConflict() {
+        void createStudent_DisplayIdConflict() {
             // Arrange
             var studentUniqueValidation = new StudentUniqueValidation(true, false);
             when(studentRepository.existsStudentByDisplayIdOrEmail(REQUEST.displayId(), REQUEST.email()))
@@ -117,22 +117,22 @@ class StudentServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: StudentApiService.findAllStudentTitles")
+    @DisplayName(value = "Test for: StudentApiService.findAllStudents")
     class FindAllStudentTitlesTest {
         @Test
         @DisplayName(value = "Scenario 1: Success")
-        void findAllTitles_Success() {
+        void findAllStudents_Success() {
             // Arrange
-            var expectedStudentTitleList = StudentTitle.mockList();
-            when(studentRepository.selectAllStudentTitles()).thenReturn(expectedStudentTitleList);
+            var expectedStudentList = StudentTitle.mockList();
+            when(studentRepository.selectAllStudents()).thenReturn(expectedStudentList);
 
             // Act
-            var actualStudentTitleList = studentService.findAllTitles();
+            var actualStudentList = studentService.findAllStudents();
 
             // Assert
-            assertEquals(expectedStudentTitleList, actualStudentTitleList);
+            assertEquals(expectedStudentList, actualStudentList);
 
-            verify(studentRepository, times(1)).selectAllStudentTitles();
+            verify(studentRepository, times(1)).selectAllStudents();
         }
     }
 
@@ -140,39 +140,39 @@ class StudentServiceImplTest {
      * @author Yozakura Minato
      */
     @Nested
-    @DisplayName(value = "Test for: StudentApiService.findStudentProfileById")
-    class FindStudentProfileByIdTest {
+    @DisplayName(value = "Test for: StudentApiService.findStudentById")
+    class FindStudentByIdTest {
         @Test
         @DisplayName(value = "Scenario 1: Success")
-        void findStudentProfileById_Success() {
+        void findStudentById_Success() {
             // Arrange
-            var expectedStudentProfile = StudentProfile.mockWithId(STUDENT_ID);
-            when(studentRepository.selectStudentProfileById(STUDENT_ID))
-                    .thenReturn(Optional.of(expectedStudentProfile));
+            var expectedStudent = StudentProfile.mockWithId(STUDENT_ID);
+            when(studentRepository.selectStudentById(STUDENT_ID))
+                    .thenReturn(Optional.of(expectedStudent));
 
             // Act
-            var actualStudentProfile = studentService.findStudentProfileById(STUDENT_ID);
+            var actualStudent = studentService.findStudentById(STUDENT_ID);
 
             // Assert
-            assertEquals(expectedStudentProfile, actualStudentProfile);
+            assertEquals(expectedStudent, actualStudent);
 
-            verify(studentRepository, times(1)).selectStudentProfileById(STUDENT_ID);
+            verify(studentRepository, times(1)).selectStudentById(STUDENT_ID);
         }
 
         @Test
         @DisplayName(value = "Scenario 2: Student ID not found")
-        void findStudentProfileById_IdNotFound() {
+        void findStudentById_IdNotFound() {
             // Arrange
-            when(studentRepository.selectStudentProfileById(STUDENT_ID)).thenReturn(Optional.empty());
+            when(studentRepository.selectStudentById(STUDENT_ID)).thenReturn(Optional.empty());
 
             // Act
             var exception = assertThrows(ResourceNotFoundException.class,
-                    () -> studentService.findStudentProfileById(STUDENT_ID));
+                    () -> studentService.findStudentById(STUDENT_ID));
 
             // Assert
             assertEquals(StudentMessage.Id.NOT_FOUND, exception.getMessage());
 
-            verify(studentRepository, times(1)).selectStudentProfileById(STUDENT_ID);
+            verify(studentRepository, times(1)).selectStudentById(STUDENT_ID);
         }
     }
 
@@ -255,15 +255,15 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: Success")
         void softDeleteStudent_Success() {
             // Arrange
-            var expectedSoftDeletedStudentDisplayTitle = StudentDisplayTitle.mock();
+            var expectedSoftDeletedStudent = StudentDisplayTitle.mock();
             when(studentRepository.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID))
-                    .thenReturn(Optional.of(expectedSoftDeletedStudentDisplayTitle));
+                    .thenReturn(Optional.of(expectedSoftDeletedStudent));
 
             // Act
-            var actualSoftDeletedStudentDisplayTitle = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
+            var actualSoftDeletedStudent = studentService.softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
 
             // Assert
-            assertEquals(expectedSoftDeletedStudentDisplayTitle, actualSoftDeletedStudentDisplayTitle);
+            assertEquals(expectedSoftDeletedStudent, actualSoftDeletedStudent);
 
             verify(studentRepository, timeout(1)).softDeleteStudent(STUDENT_ID, CURRENT_USER_ID);
         }
