@@ -7,7 +7,6 @@ import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.StudentRepository;
 import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
-import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import com.jsal.jeduApi.student.util.StudentMessage;
@@ -123,7 +122,7 @@ class StudentServiceImplTest {
         @DisplayName(value = "Scenario 1: Success")
         void findAllStudents_Success() {
             // Arrange
-            var expectedStudentList = StudentTitle.mockList();
+            var expectedStudentList = StudentProfile.mockList();
             when(studentRepository.selectAllStudents()).thenReturn(expectedStudentList);
 
             // Act

@@ -6,7 +6,6 @@ import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
-import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +29,7 @@ public interface StudentApiService {
     /**
      * @return List of StudentProfile
      */
-    List<StudentTitle> findAllStudents();
+    List<StudentProfile> findAllStudents();
 
     /**
      * <ol>

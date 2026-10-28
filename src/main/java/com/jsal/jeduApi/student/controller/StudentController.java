@@ -6,7 +6,6 @@ import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
-import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.service.StudentApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,17 +37,15 @@ public class StudentController {
             """)
     public ResponseEntity<ApiResponseBody<UUID>> createStudent(@RequestBody @Valid CreateStudentRequest request) {
         UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;
-        UUID createdStudentId = studentApiService.createStudent(request, currentUserId);
-        return ResponseEntity.ok(ApiResponseBody.data(createdStudentId));
+        return ResponseEntity.ok(ApiResponseBody.data(studentApiService.createStudent(request, currentUserId)));
     }
 
     @GetMapping(path = "/api/v1/students/all")
     @Operation(summary = "Find all students", description = """
             - Return: List of StudentTitle
             """)
-    public ResponseEntity<ApiResponseBody<List<StudentTitle>>> findAllStudents() {
-        List<StudentTitle> studentTitleList = studentApiService.findAllStudents();
-        return ResponseEntity.ok(ApiResponseBody.data(studentTitleList));
+    public ResponseEntity<ApiResponseBody<List<StudentProfile>>> findAllStudents() {
+        return ResponseEntity.ok(ApiResponseBody.data(studentApiService.findAllStudents()));
     }
 
     @GetMapping(path = "/api/v1/students/id/{studentId}")
@@ -58,8 +54,7 @@ public class StudentController {
             - Validation: Student id must exist
             """)
     public ResponseEntity<ApiResponseBody<StudentProfile>> findStudentById(@PathVariable UUID studentId) {
-        StudentProfile studentProfile = studentApiService.findStudentById(studentId);
-        return ResponseEntity.ok(ApiResponseBody.data(studentProfile));
+        return ResponseEntity.ok(ApiResponseBody.data(studentApiService.findStudentById(studentId)));
     }
 
     @PutMapping(path = "/api/v1/students/id/{studentId}")
@@ -68,12 +63,11 @@ public class StudentController {
                 - Student id must exist
                 - Student displayId must not conflict
             """)
-    public ResponseEntity<ApiResponseBody<LocalDateTime>> updateStudent(
+    public void updateStudent(
             @PathVariable UUID studentId, @RequestBody @Valid UpdateStudentRequest request
     ) {
         UUID currentUserId = SecurityConstant.CURRENT_EMPLOYEE_ID;
         studentApiService.updateStudent(studentId, request, currentUserId);
-        return ResponseEntity.ok(ApiResponseBody.empty());
     }
 
     @DeleteMapping(path = "/api/v1/students/id/{studentId}")
@@ -83,7 +77,6 @@ public class StudentController {
             """)
     public ResponseEntity<ApiResponseBody<StudentDisplayTitle>> softDelete(@PathVariable UUID studentId) {
         UUID currentUserID = SecurityConstant.CURRENT_EMPLOYEE_ID;
-        StudentDisplayTitle softDeleteStudentTitle = studentApiService.softDeleteStudent(studentId, currentUserID);
-        return ResponseEntity.ok(ApiResponseBody.data(softDeleteStudentTitle));
+        return ResponseEntity.ok(ApiResponseBody.data(studentApiService.softDeleteStudent(studentId, currentUserID)));
     }
 }

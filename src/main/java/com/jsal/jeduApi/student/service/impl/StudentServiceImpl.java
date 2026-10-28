@@ -7,7 +7,6 @@ import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.StudentRepository;
 import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
-import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import com.jsal.jeduApi.student.service.StudentApiService;
@@ -51,7 +50,7 @@ public class StudentServiceImpl implements StudentApiService {
      * {@inheritDoc}
      */
     @Override
-    public List<StudentTitle> findAllStudents() {
+    public List<StudentProfile> findAllStudents() {
         return studentRepository.selectAllStudents();
     }
 

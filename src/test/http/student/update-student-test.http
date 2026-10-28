@@ -18,9 +18,7 @@ Content-Type: application/json
     client.test("Scenario 1: Success with student phone number", () => {
         client.assert(response.status === 200);
 
-        client.assert(response.body !== null);
-        client.assert(response.body.data === null);
-        client.assert(response.body.message === null);
+        client.assert(response.body === null);
     });
 %}
 
@@ -39,9 +37,7 @@ Content-Type: application/json
     client.test("Scenario 2: Success without student phone number", () => {
         client.assert(response.status === 200);
 
-        client.assert(response.body !== null);
-        client.assert(response.body.data === null);
-        client.assert(response.body.message === null);
+        client.assert(response.body === null);
     });
 %}
 

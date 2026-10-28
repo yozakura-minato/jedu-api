@@ -6,7 +6,6 @@ import com.jsal.jeduApi.student.controller.request.CreateStudentRequest;
 import com.jsal.jeduApi.student.controller.request.UpdateStudentRequest;
 import com.jsal.jeduApi.student.repository.projection.StudentDisplayTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentProfile;
-import com.jsal.jeduApi.student.repository.projection.StudentTitle;
 import com.jsal.jeduApi.student.repository.projection.StudentUniqueValidation;
 import com.jsal.jeduApi.student.repository.type.StudentStatus;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -26,8 +25,6 @@ import java.util.UUID;
 public class StudentRepository {
     private static final RowMapper<StudentUniqueValidation> STUDENT_UNIQUE_VALIDATION_ROW_MAPPER
             = new DataClassRowMapper<>(StudentUniqueValidation.class);
-    private static final RowMapper<StudentTitle> STUDENT_TITLE_ROW_MAPPER
-            = new DataClassRowMapper<>(StudentTitle.class);
     private static final RowMapper<StudentProfile> STUDENT_PROFILE_ROW_MAPPER
             = new DataClassRowMapper<>(StudentProfile.class);
     private static final RowMapper<StudentDisplayTitle> STUDENT_DISPLAY_TITLE_ROW_MAPPER
@@ -105,15 +102,15 @@ public class StudentRepository {
     }
 
     /**
-     * @return List of StudentTitle
+     * @return List of StudentProfile
      */
-    public List<StudentTitle> selectAllStudents() {
+    public List<StudentProfile> selectAllStudents() {
         String sql = """
-                SELECT id, display_id, full_name
+                SELECT id, display_id, full_name, email, phone_number, status
                 FROM students
                 WHERE is_deleted = FALSE;
                 """;
-        return jdbcTemplate.query(sql, STUDENT_TITLE_ROW_MAPPER);
+        return jdbcTemplate.query(sql, STUDENT_PROFILE_ROW_MAPPER);
     }
 
     /**
